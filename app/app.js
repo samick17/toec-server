@@ -6,6 +6,8 @@ const logger = require('morgan');
 
 function createApp() {
 	let indexRouter = require('./routes/index');
+	let departmentRouter = require('./routes/api/v1/department');
+	let categoryRouter = require('./routes/api/v1/category');
 
 	let app = express();
 
@@ -19,6 +21,8 @@ function createApp() {
 	app.use(express.static(path.join(__dirname, 'public')));
 
 	app.use('/', indexRouter);
+	app.use('/departments', departmentRouter);
+	app.use('/categories', categoryRouter);
 
 	app.use(function(req, res, next) {
 		next(createError(404));
