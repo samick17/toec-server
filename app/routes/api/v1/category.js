@@ -3,7 +3,7 @@ const router = require('express').Router({
 	mergeParams: true
 });
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 	let seq = DB.getSeq();
 	let categories = await seq.models.Category.findAll();
 	res.json({
