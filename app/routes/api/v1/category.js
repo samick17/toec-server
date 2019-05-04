@@ -12,17 +12,17 @@ router.get('/', async (req, res) => {
 	});
 });
 
-router.post('/:categoryId', (req, res) => {
+router.get('/:categoryId', (req, res) => {
 	res.json({
 	});
 });
 
-router.post('/inProduct/:productId', (req, res) => {
+router.get('/inProduct/:productId', (req, res) => {
 	res.json({
 	});
 });
 
-router.post('/inDepartment/:departmentId', (req, res) => {
+router.get('/inDepartment/:departmentId', (req, res) => {
 	res.json({
 	});
 });
