@@ -2,7 +2,7 @@ version: "3.7"
 services:
   api:
     env_file:
-      - ./server.env
+      - ./.env
     build: .
     entrypoint: ./run.sh
     volumes:
