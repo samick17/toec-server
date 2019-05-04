@@ -8,6 +8,6 @@ services:
     volumes:
       - .:/usr/app
     ports:
-      - "54000:54000"
+      - "${SERVER_PORT}:${INTERNAL_SERVER_PORT}"
     extra_hosts:
-      - "host.docker.internal:10.0.2.15"
+      - "${HOST_NAME}:${HOST_IP}"
