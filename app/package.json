@@ -1,0 +1,39 @@
+{
+  "name": "toec-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "nyc ./node_modules/.bin/mocha --recursive ./test"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "express": "~4.16.1",
+    "express-session": "^1.16.1",
+    "http-errors": "~1.6.3",
+    "module-alias": "^2.2.0",
+    "morgan": "~1.9.1",
+    "pug": "^2.0.3",
+    "session-file-store": "^1.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0"
+  },
+  "author": {
+    "name": "Samick.Hsu",
+    "email": "boneache@gmail.com",
+    "url": ""
+  },
+  "_moduleAliases": {
+    "@DB": "dbs",
+    "@Test": "test",
+    "@Model": "models",
+    "@Route": "routes",
+    "@ModelHelper": "routes/model-helper",
+    "@App": "app",
+    "@Env": "env",
+    "@Utility": "utility"
+  }
+}
