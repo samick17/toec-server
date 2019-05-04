@@ -1,4 +1,6 @@
-const DB = require('toec-db');
+const DB = require('./dbs');
+
+let seq;
 
 async function init() {
 	let processEnv = process.env;
@@ -36,9 +38,12 @@ async function init() {
 	if(missingArgs.length) {
 		throw new Error(`The following arguments is not defined in process.env:\n${missingArgs.join('\n')}\nPlease define and try again.`);
 	}
-	await DB.init(env, dbOptions);
+	seq = await DB.init(env, dbOptions);
 }
 
 module.exports = {
-	init: init
+	init: init,
+	getSeq: function() {
+		return seq;
+	}
 };

@@ -12,6 +12,7 @@ const App = require('@App');
 const logger = require('@Utility/logger').getLogger('server');
 const env = require('@Env');
 const crypto = require('crypto');
+const DB = require('@DB');
 
 function genId() {
   return crypto.createHash('sha1').update(Date.now().toString() + Math.random().toString()).digest('hex');
@@ -70,6 +71,7 @@ function main() {
 });
  let app = App.createApp(sessions);
  launch(app, sessions, env.host, env.port);
+ DB.init();
 }
 
 main();
