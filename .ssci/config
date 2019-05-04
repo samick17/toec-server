@@ -1,0 +1,6 @@
+{
+    "main": "./ci/deploy.sh",
+    "event": "1",
+    "branches": "master",
+    "tag": "toec-server"
+}
