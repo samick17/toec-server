@@ -1,4 +1,4 @@
-function init(seq) {
+function init(seq, APIs) {
 	const DataWrapper = require('../utility/data-wrapper');
 	const {
 		Product,
