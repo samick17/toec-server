@@ -3,6 +3,6 @@ services:
   api:
     build: .
     volumes:
-      - .:/app
+      - .:/usr/app
     ports:
       - "54000:54000"
