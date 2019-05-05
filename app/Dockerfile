@@ -10,7 +10,7 @@ RUN npm install --production
 COPY . /usr/src/app
 
 # ENV here
-ENV NODE_ENV=${NODE_ENV}
+ENV NODE_ENV=production
 ENV TOEC_SECRET=${TOEC_SECRET}
 ENV TOEC_DBUSER_ID=${TOEC_DBUSER_ID}
 ENV TOEC_DBUSER_PW=${TOEC_DBUSER_PW}

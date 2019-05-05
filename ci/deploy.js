@@ -15,7 +15,7 @@ function asyncSpawn(cwd, cmd, args) {
 
 function buildDocker() {
 	let cwd = path.join(__dirname, '../app');
-	return asyncSpawn(cwd, 'docker-compose', ['up', '-d', '--build']);
+	return asyncSpawn(cwd, 'docker-compose', ['up'/*, '-d'*/, '--build']);
 }
 
 (async () => {

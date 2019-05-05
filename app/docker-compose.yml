@@ -4,7 +4,6 @@ services:
     env_file:
       - ./env/.env
     build: .
-    entrypoint: ./run.sh
     volumes:
       - .:/usr/app
     ports:
