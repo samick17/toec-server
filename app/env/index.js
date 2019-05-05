@@ -4,7 +4,7 @@ function loadEnv() {
 	const fs = require('fs');
 	const path = require('path');
 	let envFile = '';
-	switch(process.env.NODE_ENV) {
+	switch((process.env.NODE_ENV || '').trim()) {
 		case 'production':
 		envFile = '.env';
 		break;
