@@ -12,8 +12,8 @@ const ExportedAPIPath = '';
 const APIVersion = 'v1';
 
 const allowedOrigins = [
-	'http://127.0.0.1:63999',
-	'http://localhost:63999'
+	'http://127.0.0.1:53301',
+	'http://localhost:53301'
 ];
 
 router.use(ExportedAPIPath, (req, res, next) => {
