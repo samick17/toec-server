@@ -20,4 +20,4 @@ ENV TOEC_DB_NAME=${TOEC_DB_NAME}
 
 EXPOSE ${INTERNAL_SERVER_PORT}
 
-CMD ["sh", "run.sh"]
+CMD ["npm", "start"]

@@ -5,11 +5,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 function createApp() {
-	let indexRouter = require('./routes/index');
-	let departmentRouter = require('./routes/api/v1/department');
-	let categoryRouter = require('./routes/api/v1/category');
+	const indexRouter = require('./routes/index');
+	// let departmentRouter = require('./routes/api/v1/department');
+	// let categoryRouter = require('./routes/api/v1/category');
+	const apiRouter = require('@Route/api');
 
-	let app = express();
+	const app = express();
 
 	app.set('views', path.join(__dirname, 'views'));
 	app.set('view engine', 'pug');
@@ -21,8 +22,9 @@ function createApp() {
 	app.use(express.static(path.join(__dirname, 'public')));
 
 	app.use('/', indexRouter);
-	app.use('/departments', departmentRouter);
-	app.use('/categories', categoryRouter);
+	// app.use('/departments', departmentRouter);
+	// app.use('/categories', categoryRouter);
+	app.use('/', apiRouter);
 
 	app.use(function(req, res, next) {
 		next(createError(404));

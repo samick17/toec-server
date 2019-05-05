@@ -10,7 +10,7 @@ const Session = require('express-session');
 const FileStore = require('session-file-store')(Session);
 const App = require('@App');
 const logger = require('@Utility/logger').getLogger('server');
-const env = require('@Env');
+const Env = require('@Env');
 const crypto = require('crypto');
 const DB = require('@DB');
 
@@ -70,7 +70,7 @@ function main() {
  }
 });
  let app = App.createApp(sessions);
- launch(app, sessions, env.host, env.port);
+ launch(app, sessions, Env.HOST, Env.PORT);
  DB.init();
 }
 

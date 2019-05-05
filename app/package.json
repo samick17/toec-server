@@ -36,7 +36,7 @@
     "@Route": "routes",
     "@ModelHelper": "routes/model-helper",
     "@App": "app",
-    "@Env": "env",
+    "@Env": "env/index",
     "@Utility": "utility"
   }
 }
