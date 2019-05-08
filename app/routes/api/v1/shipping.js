@@ -2,32 +2,29 @@ const DB = require('@DB');
 const router = require('koa-router')();
 const ErrorHandler = require('@ErrorHandler');
 
-router.get('/', async (ctx) => {
+router.get('/regions', async (ctx) => {
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.DepartmentAPI.getDepartments();
+	let jsonData = await APIs.ShippingAPI.getShippingRegions();
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
-			name: 'departments'
+			name: 'regions'
 		});
 	}
 });
 
-router.get('/:departmentId', async (ctx) => {
+router.get('/regions/:shippingRegionId', async (ctx) => {
 	let {
-		departmentId
+		shippingRegionId
 	} = ctx.params;
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.DepartmentAPI.getDepartmentById(departmentId);
-	res.json(jsonData || ErrorHandler.handle('NotFound', {
-		name: `department:${departmentId}`
-	}));
+	let jsonData = await APIs.ShippingAPI.getShippingRegionById(shippingRegionId);
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
-			name: `department:${departmentId}`
+			name: `regions:${shippingRegionId}`
 		});
 	}
 });

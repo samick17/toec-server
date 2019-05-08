@@ -1,9 +1,21 @@
-const DBWrapper = require('./db-wrapper');
 const SetupEnv = require('./utility/setup-env');
+const DBWrapper = require('./db-wrapper');
+const DBAPIs = require('./dbs-api');
+
+function initializeAPI(seq) {
+	let apis = {};
+	DBAPIs.init(seq, apis);
+	return apis;
+}
 
 async function init(env, dbOptions) {
 	SetupEnv.init(env);
-	return await DBWrapper.init(dbOptions);
+	let seq = await DBWrapper.init(dbOptions);
+	let APIs = initializeAPI(seq);
+	return {
+		seq,
+		APIs
+	};
 }
 
 module.exports = {

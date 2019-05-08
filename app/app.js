@@ -1,43 +1,44 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const Koa = require('koa');
+const views = require('koa-views');
+const json = require('koa-json');
+const onerror = require('koa-onerror');
+const bodyparser = require('koa-bodyparser');
+const logger = require('koa-logger');
 
 function createApp() {
-	const indexRouter = require('./routes/index');
-	// let departmentRouter = require('./routes/api/v1/department');
-	// let categoryRouter = require('./routes/api/v1/category');
-	const apiRouter = require('@Route/api');
+	const api = require('./routes/api');
 
-	const app = express();
+	const app = new Koa();
+	// error handler
+	onerror(app);
 
-	app.set('views', path.join(__dirname, 'views'));
-	app.set('view engine', 'pug');
+	// middlewares
+	app.use(bodyparser({
+		enableTypes:['json', 'form', 'text']
+	}));
+	app.use(json());
+	app.use(logger());
+	app.use(require('koa-static')(__dirname + '/public'));
 
-	app.use(logger('dev'));
-	app.use(express.json());
-	app.use(express.urlencoded({ extended: false }));
-	app.use(cookieParser());
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(views(__dirname + '/views', {
+		extension: 'pug'
+	}));
 
-	app.use('/', indexRouter);
-	// app.use('/departments', departmentRouter);
-	// app.use('/categories', categoryRouter);
-	app.use('/', apiRouter);
-
-	app.use(function(req, res, next) {
-		next(createError(404));
+	// logger
+	app.use(async (ctx, next) => {
+		const start = new Date();
+		await next();
+		const ms = new Date() - start;
+		console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 	});
 
-	app.use(function(err, req, res, next) {
-		res.locals.message = err.message;
-		res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// routes
+	app.use(api.routes(), api.allowedMethods());
 
-		res.status(err.status || 500);
-		res.render('error');
+	// error-handling
+	app.on('error', (err, ctx) => {
+		console.error('server error', err, ctx)
 	});
-
 	return app;
 }
 

@@ -27,15 +27,15 @@ function init(seq, APIs) {
 		// * name
 		// * customerId
 		// * email
-		updateProfile: async function(customerId, name, email, {password, dayPhone, evePhone, mobPhone}={}) {
+		updateProfile: async function(customerId, name, email, {password, day_phone, eve_phone, mob_phone}={}) {
 			let newData = {
 				name: name,
 				email: email,
 			};
 			if(password) newData.password = await Encryptor.encrypt(password);
-			if(dayPhone) newData.day_phone = dayPhone;
-			if(evePhone) newData.eve_phone = evePhone;
-			if(mobPhone) newData.mob_phone = mobPhone;
+			if(day_phone) newData.day_phone = day_phone;
+			if(eve_phone) newData.eve_phone = eve_phone;
+			if(mob_phone) newData.mob_phone = mob_phone;
 			await Customer.update(newData, {
 				where: {
 					customer_id: customerId
@@ -89,6 +89,21 @@ function init(seq, APIs) {
 			});
 			return customerToJson(customer);
 		},
+		// return customerJson if valid
+		auth: async function(email, password) {
+			let encryptedPwd = await Encryptor.encrypt(password);
+			let customer = await Customer.findOne({
+				where: {
+					email: email
+				}
+			});
+			if(customer) {
+				let isAuthenticated = customer.dataValues.password === encryptedPwd;
+				if(isAuthenticated) {
+					return customerToJson(customer);
+				}
+			}
+		},
 		// # Auth required.
 		// * address_1
 		// * city
@@ -141,10 +156,12 @@ if(module.id === '.') {
 		let API = init(seq, {});
 		// let customer = await API.updateProfile(15)
 		// console.log(customer);
-		// let customer = await API.getCustomerById(15);
+		// let customer = await API.getCustomerById(1);
 		// console.log(customer);
-		let customer = await API.register('samick', 'ggg@google.com', 'abcd1234');
+		let customer = await API.auth('ggg1@google.com', 'abcd1234');
 		console.log(customer);
+		// let customer = await API.register('samick', 'ggg1@google.com', 'abcd1234');
+		// console.log(customer);
 		// let customer = await API.updateAddress(15, 'dfgfg');
 		// console.log(customer);
 		// let customer = await API.updateCreditCard(15, 'dfgdfgfddfgdfgdf');

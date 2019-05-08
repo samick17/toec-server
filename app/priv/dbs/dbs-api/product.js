@@ -47,7 +47,10 @@ function init(seq, APIs) {
 					jsonObjects.push(product.dataValues);
 				}
 			});
-			return jsonObjects;
+			return {
+				count: jsonObjects.length,
+				rows: jsonObjects
+			};
 		},
 		// * queryString: string
 		// allWords: string, default: 'on', Enum{'on', 'off'}
@@ -77,7 +80,10 @@ function init(seq, APIs) {
 					jsonObjects.push(product.dataValues);
 				}
 			});
-			return jsonObjects;
+			return {
+				count: jsonObjects.length,
+				rows: jsonObjects
+			};
 		},
 		// * productId: integer
 		getProductById: async function(productId) {
@@ -247,7 +253,7 @@ if(module.id === '.') {
 		// let products = await API.getProducts({
 		// 	descriptionLength: 100
 		// });
-		// console.log(products.length);
+		// console.log(products);
 		// let products = await API.searchProducts('ship');
 		// console.log(products);
 		// let product = await API.getProductById(1);
@@ -261,8 +267,8 @@ if(module.id === '.') {
 		// console.log(products);
 		// let products = await API.getProductsByDepartmentId(3);
 		// console.log(products);
-		let reviews = await API.getProductReviewById(1);
-		console.log(reviews);
+		// let reviews = await API.getProductReviewById(1);
+		// console.log(reviews);
 		// let ret = await API.createProductReview(1, 1, 'Testzxczxc - asdsa ', 5);
 		// console.log(ret);
 

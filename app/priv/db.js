@@ -1,6 +1,7 @@
 const DB = require('./dbs');
 
 let seq;
+let APIs = {};
 
 async function init() {
 	let processEnv = process.env;
@@ -38,12 +39,21 @@ async function init() {
 	if(missingArgs.length) {
 		throw new Error(`The following arguments is not defined in process.env:\n${missingArgs.join('\n')}\nPlease define and try again.`);
 	}
-	seq = await DB.init(env, dbOptions);
+	let dbData = await DB.init(env, dbOptions);
+	seq = dbData.seq;
+	APIs = dbData.APIs;
+}
+
+function getSeq() {
+	return seq;
+}
+
+function getAPIs() {
+	return APIs;
 }
 
 module.exports = {
 	init: init,
-	getSeq: function() {
-		return seq;
-	}
+	getSeq: getSeq,
+	getAPIs: getAPIs
 };

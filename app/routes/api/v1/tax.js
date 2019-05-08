@@ -4,30 +4,27 @@ const ErrorHandler = require('@ErrorHandler');
 
 router.get('/', async (ctx) => {
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.DepartmentAPI.getDepartments();
+	let jsonData = await APIs.TaxAPI.getTaxes();
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
-			name: 'departments'
+			name: 'tax'
 		});
 	}
 });
 
-router.get('/:departmentId', async (ctx) => {
+router.get('/:taxId', async (ctx) => {
 	let {
-		departmentId
+		taxId
 	} = ctx.params;
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.DepartmentAPI.getDepartmentById(departmentId);
-	res.json(jsonData || ErrorHandler.handle('NotFound', {
-		name: `department:${departmentId}`
-	}));
+	let jsonData = await APIs.TaxAPI.getTaxById(taxId);
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
-			name: `department:${departmentId}`
+			name: `tax:${taxId}`
 		});
 	}
 });

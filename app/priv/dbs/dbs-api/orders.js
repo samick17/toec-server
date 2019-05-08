@@ -51,7 +51,7 @@ function init(seq, APIs) {
 			let orderDetailsDataArray = items.map(item => {
 				return {
 					order_id: orderId,
-					product_id: item.productId,
+					product_id: item.product_id,
 					attributes: item.attributes,
 					product_name: item.name,
 					quantity: item.quantity,
@@ -78,7 +78,7 @@ function init(seq, APIs) {
 		},
 		// # Auth required.
 		// * orderId
-		getOrdersInfo: async function(orderId) {
+		getOrdersShortDetail: async function(orderId) {
 			let orders = await Orders.findOne({
 				where: {
 					order_id: orderId
@@ -149,7 +149,7 @@ if(module.id === '.') {
 		// console.log(orders1);
 		// let orders2 = await API.getOrderDetails(1);
 		// console.log(orders2);
-		// let orders1 = await API.getOrdersInfo(6);
+		// let orders1 = await API.getOrdersShortDetail(1);
 		// console.log(orders1);
 		// let orders1 = await API.dropOrders(6);
 		// console.log(orders1);
