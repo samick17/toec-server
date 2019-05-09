@@ -13,9 +13,20 @@ function asyncSpawn(cwd, cmd, args) {
 	});
 }
 
-function buildDocker() {
+async function delay(ms) {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms)
+	});
+}
+
+async function buildDocker() {
 	let cwd = path.join(__dirname, '../app');
-	return asyncSpawn(cwd, 'docker-compose', ['up', '-d', '--build']);
+	let tag = 'toec_server';
+	await asyncSpawn(cwd, 'docker', ['stack', 'rm', tag]);
+	await asyncSpawn(cwd, 'docker', ['rmi', `${tag}:latest`]);
+	await asyncSpawn(cwd, 'docker', ['build', '.', '-t', `${tag}:latest`]);
+	await delay(5000);
+	return await asyncSpawn(cwd, 'docker', ['stack', 'deploy', '-c', 'stack.yml', tag]);
 }
 
 (async () => {
