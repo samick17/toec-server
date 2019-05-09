@@ -15,10 +15,20 @@ function init(seq, APIs) {
 	function cartItemToJsonWithProductId(item) {
 		let jsonData = itemToJson(item);
 		let productData = item.dataValues.Product.dataValues;
-		jsonData.productId = productData.product_id;
+		jsonData.product_id = productData.product_id;
 		jsonData.name = productData.name;
 		jsonData.price = productData.price;
 		jsonData.subtotal = productData.price * jsonData.quantity;
+		return jsonData;
+	}
+	function cartItemToJsonWithProductIdImage(item) {
+		let jsonData = itemToJson(item);
+		let productData = item.dataValues.Product.dataValues;
+		jsonData.product_id = productData.product_id;
+		jsonData.name = productData.name;
+		jsonData.price = productData.price;
+		jsonData.subtotal = productData.price * jsonData.quantity;
+		jsonData.image = productData.image;
 		return jsonData;
 	}
 	function cartItemToJson(item) {
@@ -41,7 +51,7 @@ function init(seq, APIs) {
 		// * productId
 		// * attributes
 		addProductToCart: async function(cartId, productId, attributes, {quantity, buyNow}={quantity: 1}) {
-			return await ShoppingCart.create({
+			await ShoppingCart.create({
 				cart_id: cartId,
 				product_id: productId,
 				attributes: attributes,
@@ -49,9 +59,13 @@ function init(seq, APIs) {
 				buy_now: buyNow,
 				added_on: Date.now()
 			});
+			return await api.getCartById(cartId, {
+				withProductId: true,
+				withImage: true
+			});
 		},
 		// * cartId
-		getCartById: async function(cartId, {withProductId}={withProductId: false}) {
+		getCartById: async function(cartId, {withProductId, withImage}={withProductId: false, withImage: false}) {
 			let items = await ShoppingCart.findAll({
 				include: [{
 					model: Product
@@ -60,7 +74,16 @@ function init(seq, APIs) {
 					cart_id: cartId
 				}
 			});
-			let converterFn = withProductId ? cartItemToJsonWithProductId : cartItemToJson;
+			let converterFn;
+			if(withProductId) {
+				if(withImage) {
+					converterFn = cartItemToJsonWithProductIdImage;
+				} else {
+					converterFn = cartItemToJsonWithProductId;
+				}
+			} else {
+				converterFn = cartItemToJson;
+			}
 			return items.map(converterFn);
 		},
 		// * itemId
@@ -79,11 +102,13 @@ function init(seq, APIs) {
 					item_id: itemId
 				}
 			});
-			return await this.getCartById(cart.dataValues.cart_id);
+			return await this.getCartById(cart.dataValues.cart_id, {
+				withProductId: true
+			});
 		},
 		// * cartId
 		emptyCart: async function(cartId) {
-			let s = await ShoppingCart.destroy({
+			await ShoppingCart.destroy({
 				where: {
 					cart_id: cartId
 				}
@@ -135,16 +160,16 @@ if(module.id === '.') {
 		let cartId = '35ddfe3fca224ecaab3008760d462626';
 		// let item = await API.addProductToCart(cartId, 5, '');
 		// console.log(item);
-		// let item = await API.getCartById(cartId, 1, '');
-		// console.log(item);
+		let item = await API.getCartById(cartId, 1, '');
+		console.log(item);
 		// let item = await API.updateCartById(1, 2);
 		// console.log(item);
 		// let item = await API.emptyCart(cartId);
 		// console.log(item);
 		// let item = await API.moveProductToCart(itemId);
 		// console.log(item);
-		let amount = await API.getAmountOfCart(cartId);
-		console.log(amount);
+		// let amount = await API.getAmountOfCart(cartId);
+		// console.log(amount);
 		// await API.removeProductFromCart(1);
 	})();
 }

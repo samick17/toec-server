@@ -1,5 +1,2 @@
-describe('index', () => {
-	it('abc', () => {
-
-	});
-});
+process.env.NODE_ENV = 'test';
+require('module-alias/register');

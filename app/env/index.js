@@ -14,6 +14,9 @@ function loadEnv() {
 		case 'dev':
 		envFile = 'dev.env';
 		break;
+		case 'test':
+		envFile = 'test.env';
+		break;
 		default:
 		envFile = 'dev.env';
 		break;

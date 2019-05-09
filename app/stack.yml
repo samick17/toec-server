@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  api:
+    image: toec_server:latest
+    env_file:
+      - ./env/.env
+    restart: always
+    volumes:
+      - .:/usr/app
+    ports:
+      - "${SERVER_PORT}:${INTERNAL_SERVER_PORT}"
+    extra_hosts:
+      - "${HOST_NAME}:${HOST_IP}"

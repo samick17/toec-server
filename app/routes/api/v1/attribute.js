@@ -4,27 +4,42 @@ const ErrorHandler = require('@ErrorHandler');
 
 router.get('/', async (ctx) => {
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategories();
+	let jsonData = await APIs.AttributeAPI.getAttributes();
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
-			name: 'categories'
+			name: 'departments'
 		});
 	}
 });
 
-router.get('/:categoryId', async (ctx) => {
+router.get('/:attributeId', async (ctx) => {
 	let {
-		categoryId
+		attributeId
 	} = ctx.params;
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategoryById(categoryId);
+	let jsonData = await APIs.AttributeAPI.getAttributeById(attributeId);
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
-			name: `category:${categoryId}`
+			name: attributeId
+		});
+	}
+});
+
+router.get('/values/:attributeId', async (ctx) => {
+	let {
+		attributeId
+	} = ctx.params;
+	let APIs = DB.getAPIs();
+	let jsonData = await APIs.AttributeAPI.getAttributeValues(attributeId);
+	if(jsonData) {
+		ctx.body = jsonData;
+	} else {
+		ErrorHandler.handle('NotFound', {
+			name: `values:${attributeId}`
 		});
 	}
 });
@@ -34,27 +49,12 @@ router.get('/inProduct/:productId', async (ctx) => {
 		productId
 	} = ctx.params;
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategoriesOfProduct(productId);
+	let jsonData = await APIs.AttributeAPI.getAttributesWithProductId(productId);
 	if(jsonData) {
 		ctx.body = jsonData;
 	} else {
 		ErrorHandler.handle('NotFound', {
 			name: `inProduct:${productId}`
-		});
-	}
-});
-
-router.get('/inDepartment/:departmentId', async (ctx) => {
-	let {
-		departmentId
-	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategoriesOfDepartment(departmentId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `inDepartment:${departmentId}`
 		});
 	}
 });

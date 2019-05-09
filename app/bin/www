@@ -6,8 +6,6 @@
 //
 require('module-alias/register');
 const http = require('http');
-const Session = require('express-session');
-const FileStore = require('session-file-store')(Session);
 const App = require('@App');
 const logger = require('@Utility/logger').getLogger('server');
 const Env = require('@Env');
@@ -28,10 +26,9 @@ function normalizePort(val) {
   return false;
 }
 
-function launch(app, sessions, host, port) {
-  let server = http.createServer(app);
+function launch(app, host, port) {
   port = normalizePort(port);
-  app.set('port', port);
+  let server = http.createServer(app.callback());
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);
@@ -60,18 +57,9 @@ function launch(app, sessions, host, port) {
   }
 }
 function main() {
- let sessions = Session({
-  store: new FileStore({}),
-  secret: genId(),
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-   maxAge: 60000
- }
-});
- let app = App.createApp(sessions);
- launch(app, sessions, Env.HOST, Env.PORT);
- DB.init();
+  let app = App.createApp();
+  launch(app, Env.HOST, Env.PORT);
+  DB.init();
 }
 
 main();
