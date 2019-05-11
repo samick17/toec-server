@@ -1,6 +1,6 @@
 const DB = require('@DB');
 const router = require('koa-router')();
-const ErrorHandler = require('@ErrorHandler');
+const ErrorHandler = require('@Priv/error-handler');
 
 // TODO validate query params.
 router.get('/', async (ctx) => {

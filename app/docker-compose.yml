@@ -1,6 +1,13 @@
 version: "3.7"
 services:
+  redis:
+    image: redis
+    container_name: ${REDIS_NAME}
+    expose:
+      - ${REDIS_PORT}
   api:
+    links:
+      - redis
     env_file:
       - ./env/.env
     build: .

@@ -1,6 +1,7 @@
 const DB = require('@DB');
 const router = require('koa-router')();
-const ErrorHandler = require('@ErrorHandler');
+const ErrorHandler = require('@Priv/error-handler');
+const Auth = require('@Priv/auth');
 
 router.put('/', async (ctx) => {
 	// TODO get customerId by session
@@ -24,12 +25,28 @@ router.put('/', async (ctx) => {
 	ctx.body = {};
 });
 
+// redis -> headers token -> error
 router.get('/', async (ctx) => {
-	// TODO get customerId by session
-	let customerId = 1;
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CustomerAPI.getCustomerById(customerId);
-	ctx.body = jsonData;
+	let customerId = ctx.session.uid || await (async () => {
+		let accessToken = ctx.headers['user-key'];
+		let tokenInfo = Auth.getTokenInfo(accessToken);
+		let validationData = Auth.validateToken(accessToken, ctx.session.name, ctx.session.email);
+		if(validationData.isValid) {
+			return tokenInfo.uid;
+		} else {
+			ErrorHandler.handle(validationData.reason);
+		}
+		
+	})();
+	if(customerId) {
+		let jsonData = await APIs.CustomerAPI.getCustomerById(customerId);
+		ctx.body = jsonData;
+	} else {
+		ErrorHandler.handle('NotFound', {
+			name: 'userId'
+		});
+	}
 });
 
 module.exports = router;

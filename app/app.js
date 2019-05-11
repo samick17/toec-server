@@ -4,13 +4,34 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
+const session = require('koa-session2');
+const redisStore = require('@Priv/redis-store');
+const Env = require('@Env');
 
 function createApp() {
-	const api = require('./routes/api');
+	const api = require('@Route/api');
+	const redisClient = require('@Priv/redis-client').client;
 
 	const app = new Koa();
+	app.keys = [Env.TOEC_APP_KEY];
+	const redisName = Env.REDIS_NAME || '127.0.0.1';
+	const redisPort = Env.REDIS_PORT || 6379;
+	const SessionConfig = {
+		key: Env.TOEC_COOKIE_KEY,
+		maxAge: 86400000,
+		autoCommit: true,
+		overwrite: true,
+		httpOnly: true,
+		signed: true,
+		rolling: false,
+		renew: true,
+		store: redisStore({
+			client: redisClient
+		})
+	};
 	// error handler
 	onerror(app);
+	app.use(session(SessionConfig, app));
 
 	// middlewares
 	app.use(bodyparser({
@@ -34,6 +55,9 @@ function createApp() {
 
 	// routes
 	app.use(api.routes(), api.allowedMethods());
+	app.use(ctx => {
+		ctx.session.refresh();
+	});
 
 	// error-handling
 	app.on('error', (err, ctx) => {

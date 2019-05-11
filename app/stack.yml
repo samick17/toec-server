@@ -1,13 +1,21 @@
 version: "3.7"
 services:
+  redis:
+    image: redis:alpine
+    networks:
+      - backend
   api:
     image: toec_server:latest
+    networks:
+      - backend
     env_file:
       - ./env/.env
-    restart: always
     volumes:
       - .:/usr/app
     ports:
       - "${SERVER_PORT}:${INTERNAL_SERVER_PORT}"
     extra_hosts:
       - "${HOST_NAME}:${HOST_IP}"
+  
+networks:
+  backend:

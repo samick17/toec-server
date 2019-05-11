@@ -1,6 +1,7 @@
 const DB = require('@DB');
 const router = require('koa-router')();
-const ErrorHandler = require('@ErrorHandler');
+const ErrorHandler = require('@Priv/error-handler');
+const Auth = require('@Priv/auth');
 
 router.post('/', async (ctx) => {
 	let {
@@ -18,8 +19,34 @@ router.post('/login', async (ctx) => {
 		email,
 		password
 	} = ctx.request.body;
-	let isAuthenticated = await APIs.CustomerAPI.auth(email, password);
-	ctx.body = jsonData;
+	let APIs = DB.getAPIs();
+	let customerJsonData = await APIs.CustomerAPI.auth(email, password);
+	if(customerJsonData) {
+		const ExpiresIn = '24h';
+		let uid = customerJsonData.customer_id;
+		let name = customerJsonData.name;
+		let email = customerJsonData.email;
+		let accessToken = await Auth.generateToken({
+			uid: uid,
+			name: name,
+			email: email
+		}, {
+			expiresIn: ExpiresIn
+		});
+		ctx.session.uid = uid;
+		ctx.session.name = name;
+		ctx.session.email = email;
+		let jsonData = {
+			customer: {
+				schema: customerJsonData
+			},
+			accessToken: accessToken,
+			expires_in: ExpiresIn
+		};
+		ctx.body = jsonData;
+	} else {
+		//
+	}
 });
 
 router.post('/facebook', async (ctx) => {

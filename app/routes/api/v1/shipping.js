@@ -1,6 +1,6 @@
 const DB = require('@DB');
 const router = require('koa-router')();
-const ErrorHandler = require('@ErrorHandler');
+const ErrorHandler = require('@Priv/error-handler');
 
 router.get('/regions', async (ctx) => {
 	let APIs = DB.getAPIs();
