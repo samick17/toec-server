@@ -69,10 +69,10 @@ describe('auth', () => {
 
 	it('validateCreditCard', async () => {});
 
-	it('validateNumber', async () => {
-		Validator.validateNumber(9);
+	it('validateInteger', async () => {
+		Validator.validateInteger(9);
 		try {
-			Validator.validateNumber('', {
+			Validator.validateInteger('', {
 				IDNotNumber: {
 					code: '0x0001',
 					message: 'Id should be a number'
@@ -84,10 +84,10 @@ describe('auth', () => {
 		}
 	});
 
-	it('validateNumberRange', async () => {
-		Validator.validateNumber(9, 0, 100);
+	it('validateIntegerRange', async () => {
+		Validator.validateInteger(9, 0, 100);
 		try {
-			Validator.validateNumberRange('', 0, 100, {
+			Validator.validateIntegerRange('', 0, 100, {
 				IDNotNumber: {
 					code: '0x0001',
 					message: 'Id should be a number'
@@ -98,7 +98,7 @@ describe('auth', () => {
 			assert.equal(err.message, 'Id should be a number');
 		}
 		try {
-			Validator.validateNumberRange(101, 0, 100, {
+			Validator.validateIntegerRange(101, 0, 100, {
 				NumberOutOfRange: {
 					code: '0x0002',
 					message: 'Id out of range'

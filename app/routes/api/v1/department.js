@@ -17,6 +17,7 @@ router.get('/:departmentId', async (ctx) => {
 	let {
 		departmentId
 	} = ctx.params;
+	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

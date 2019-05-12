@@ -86,19 +86,6 @@ function init(seq, APIs) {
 			});
 			if(orders) return ordersToJson(orders);
 		},
-		// @deprecated
-		// # Auth required.
-		// * orderId
-		// getOrderDetailsById: async function(orderId) {
-		// 	let orders = await OrderDetail.findOne({
-		// 		where: {
-		// 			order_id: orderId
-		// 		}
-		// 	});
-		// 	if(orders) {
-		// 		return orderDetailsToJson(orders);
-		// 	};
-		// },
 		// # Auth required.
 		getOrderDetails: async function(orderId) {
 			let orders = await OrderDetail.findAll({
@@ -107,6 +94,14 @@ function init(seq, APIs) {
 				}
 			});
 			return orders.map(orderDetailsToJson);
+		},
+		getOrdersByCustomerId: async function(customerId) {
+			let ordersArray = await Orders.findAll({
+				where: {
+					customer_id: customerId
+				}
+			});
+			if(ordersArray) return ordersArray.map(ordersToJson);
 		},
 		dropOrders: async function(orderId) {
 			let t = await seq.transaction();
@@ -145,12 +140,12 @@ if(module.id === '.') {
 		let cartId = '35ddfe3fca224ecaab3008760d462626';
 		// let orders = await API.createOrders(1, cartId, 1, 1);
 		// console.log(orders);
-		// let orders1 = await API.getOrderDetailsById(6);
-		// console.log(orders1);
 		// let orders2 = await API.getOrderDetails(1);
 		// console.log(orders2);
 		// let orders1 = await API.getOrdersShortDetail(1);
 		// console.log(orders1);
+		// let orders = await API.getOrdersByCustomerId(1);
+		// console.log(orders);
 		// let orders1 = await API.dropOrders(6);
 		// console.log(orders1);
 	})();

@@ -8,6 +8,7 @@ module.exports = {
 	Product: require('./product'),
 	Shipping: require('./shipping'),
 	ShoppingCart: require('./shopping-cart'),
+	Stripe: require('./stripe'),
 	Tax: require('./tax'),
 	User: require('./user'),
 	Default: {

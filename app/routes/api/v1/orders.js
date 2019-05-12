@@ -4,7 +4,7 @@ const OrdersError = require('@Priv/error/orders');
 const RouteHandler = require('@Priv/route-handler');
 
 router.post('/', async (ctx) => {
-	let customerId = ctx.session.uid;
+	let customerId = await RouteUtils.auth(ctx);
 	let {
 		cart_id,
 		shipping_id,
@@ -19,9 +19,11 @@ router.post('/', async (ctx) => {
 });
 
 router.get('/:orderId', async (ctx) => {
+	await RouteUtils.auth(ctx);
 	let {
 		orderId
 	} = ctx.params;
+	Validator.validateInteger(orderId, OrdersError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
@@ -38,15 +40,23 @@ router.get('/:orderId', async (ctx) => {
 	});
 });
 
-// TODO
+// Auth required
 router.get('/inCustomer', async (ctx) => {
-	ctx.body = {};
+	let customerId = await RouteUtils.auth(ctx);
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.getOrdersByCustomerId(customerId);
+		}
+	});
 });
 
 router.get('/shortDetail/:orderId', async (ctx) => {
+	await RouteUtils.auth(ctx);
 	let {
 		orderId
 	} = ctx.params;
+	Validator.validateInteger(orderId, OrdersError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

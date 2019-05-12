@@ -17,6 +17,10 @@ function requireArgs(object, errorCodes, errorKey) {
 	}
 }
 
+function isInt(num) {
+	return Number(num) === num && num %1 === 0;
+}
+
 function validateEmail(email, errorCodes, errorKey) {
 	if(!reEmail.exec(email)) {
 		ErrorHandler.handle(errorCodes[errorKey || 'InvalidEmailFormat'], {
@@ -33,14 +37,14 @@ function validateCreditCard(creditCard) {
 
 }
 
-function validateNumber(num, errorCodes, errorKey) {
-	if(typeof num !== 'number') {
+function validateInteger(num, errorCodes, errorKey) {
+	if(typeof num !== 'number' && isInt(num)) {
 		ErrorHandler.handle(errorCodes[errorKey || 'NotNumber']);
 	}
 }
 
-function validateNumberRange(num, from, to, errorCodes, errorKey1, errorKey2) {
-	validateNumber(num, errorCodes, errorKey1);
+function validateIntegerRange(num, from, to, errorCodes, errorKey1, errorKey2) {
+	validateInteger(num, errorCodes, errorKey1);
 	if(num < from && num > to) {
 		ErrorHandler.handle(errorCodes[errorKey2]);
 	}
@@ -71,8 +75,8 @@ module.exports = {
 	validateEmail: validateEmail,
 	validatePhoneNumber: validatePhoneNumber,
 	validateCreditCard: validateCreditCard,
-	validateNumber: validateNumber,
-	validateNumberRange: validateNumberRange,
+	validateInteger: validateInteger,
+	validateIntegerRange: validateIntegerRange,
 	validateStrEnum: validateStrEnum,
 	validateStr: validateStr,
 	validateStrLenRange: validateStrLenRange

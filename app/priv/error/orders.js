@@ -6,5 +6,9 @@ module.exports = {
 	IDNotFound: {
 		code: 'ORD_02',
 		message: 'Invalid orders ID "${id}"'
+	},
+	InvalidOrderFormat: {
+		code: 'ORD_03',
+		message: 'The order is not match "field,(DESC|ASC)"'
 	}
 };

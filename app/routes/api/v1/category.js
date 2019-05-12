@@ -1,6 +1,8 @@
 const DB = require('@DB');
 const router = require('koa-router')();
 const CategoryError = require('@Priv/error/category');
+const DepartmentError = require('@Priv/error/department');
+const ProductError = require('@Priv/error/product');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
 
@@ -10,10 +12,13 @@ router.get('/', async (ctx) => {
 		page = 1,
 		limit = 20
 	} = ctx.query;
+	Validator.validateStrEnum(order, ['category_id,ASC', 'category_id,DESC', 'name,ASC', 'name,DESC'], CategoryError, 'InvalidOrderFormat');
+	Validator.validateIntegerRange(page, 1, Infinity, CategoryError, 'PageNotNumber', 'PageOutOfRange');
+	Validator.validateIntegerRange(limit, 1, 500, CategoryError, 'LimitNotNumber', 'LimitOutOfRange');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
-			return await APIs.CategoryAPI.getCategories();
+			return await APIs.CategoryAPI.getCategories({order, page, limit});
 		}
 	});
 });
@@ -22,6 +27,7 @@ router.get('/:categoryId', async (ctx) => {
 	let {
 		categoryId
 	} = ctx.params;
+	Validator.validateInteger(categoryId, CategoryError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
@@ -42,6 +48,7 @@ router.get('/inProduct/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
@@ -62,6 +69,7 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 	let {
 		departmentId
 	} = ctx.params;
+	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

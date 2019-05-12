@@ -78,16 +78,16 @@ if(module.id === '.') {
 	(async () => {
 		const seq = await DBWrapper.init();
 		let API = init(seq, {});
-		// let categories = await API.getCategories({
-		// 	order: 'category_id,DESC',
-		// 	page: 1,
-		// 	limit: 5
-		// });
-		// console.log(categories);
+		let categories = await API.getCategories({
+			order: 'category_id,DESC',
+			page: 1,
+			limit: 5
+		});
+		console.log(categories);
 		// let category = await API.getCategoryById(1);
 		// console.log(category);
-		let categories = await API.getCategoriesOfProduct(999);
-		console.log(categories);
+		// let categories = await API.getCategoriesOfProduct(999);
+		// console.log(categories);
 		// let categories = await API.getCategoriesOfDepartment(1);
 		// console.log(categories);
 	})();

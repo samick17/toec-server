@@ -35,6 +35,9 @@ router.post('/login', async (ctx) => {
 		email,
 		password
 	} = ctx.request.body;
+	Validator.requireArgs({
+		email, password
+	}, UserError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let customerJsonData = await APIs.CustomerAPI.auth(email, password);
 	await RouteUtils.responseUserData(ctx, customerJsonData);
@@ -45,6 +48,7 @@ router.post('/facebook', async (ctx) => {
 });
 
 router.get('/logout', async (ctx) => {
+	await RouteUtils.auth(ctx);
 	ctx.session = null;
 	ctx.body = {};
 });
@@ -60,6 +64,9 @@ router.put('/address', async (ctx) => {
 		country,
 		shipping_region_id
 	} = ctx.request.body;
+	Validator.requireArgs({
+		address_1, city, region, postal_code, country, shipping_region_id
+	}, UserError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.CustomerAPI.updateAddress(customerId, address_1, city, region, postal_code, country, shipping_region_id);
 	ctx.body = jsonData;
@@ -70,6 +77,9 @@ router.put('/creditCard', async (ctx) => {
 	let {
 		credit_card
 	} = ctx.request.body;
+	Validator.requireArgs({
+		credit_card
+	}, UserError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.CustomerAPI.updateCreditCard(customerId, credit_card);
 	ctx.body = jsonData;
