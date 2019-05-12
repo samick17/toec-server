@@ -55,6 +55,11 @@ function init(seq, APIs) {
 				return customerToJson(customer);
 			}
 		},
+		countOfEmail: async function(email) {
+			return await Customer.count({
+				email: email
+			});
+		},
 		// * name
 		// * email
 		// * password

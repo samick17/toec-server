@@ -2,11 +2,10 @@ const DB = require('@DB');
 const router = require('koa-router')();
 const ErrorHandler = require('@Priv/error-handler');
 const UserError = require('@Priv/error/user');
-const Auth = require('@Priv/auth');
+const RouteUtils = require('@Priv/route-utils');
 
 router.put('/', async (ctx) => {
-	// TODO get customerId by session
-	let customerId = 1;
+	let customerId = await RouteUtils.auth(ctx);
 	let {
 		name,
 		email,
@@ -27,23 +26,9 @@ router.put('/', async (ctx) => {
 
 // redis -> headers token -> error
 router.get('/', async (ctx) => {
-	console.log(ctx.session)
-	let APIs = DB.getAPIs();
-	let customerId = ctx.session.uid || await (async () => {
-		let accessToken = ctx.headers['user-key'];
-		let validationData = Auth.validateToken(accessToken, ctx.session.name, ctx.session.email);
-		if(validationData.isValid) {
-			let tokenInfo = validationData.info;
-			return tokenInfo.uid;
-		} else {
-			ErrorHandler.handle(validationData.reason, {
-				name: ctx.session.name,
-				email: ctx.session.email,
-				token: accessToken
-			});
-		}
-	})();
+	let customerId = await RouteUtils.auth(ctx);
 	if(customerId) {
+		let APIs = DB.getAPIs();
 		let jsonData = await APIs.CustomerAPI.getCustomerById(customerId);
 		ctx.body = jsonData;
 	} else {

@@ -1,6 +1,10 @@
 module.exports = {
-	IDNotFound: {
+	IDNotNumber: {
 		code: 'PRD_01',
-		message: ''
+		message: 'Product ID should be a number'
+	},
+	IDNotFound: {
+		code: 'PRD_02',
+		message: 'Invalid product ID "${id}"'
 	}
 };

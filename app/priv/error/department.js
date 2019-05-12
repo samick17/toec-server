@@ -1,10 +1,10 @@
 module.exports = {
 	IDNotNumber: {
 		code: 'DEP_01',
-		message: ''
+		message: 'Tax ID should be a number'
 	},
 	IDNotFound: {
 		code: 'DEP_02',
-		message: ''
+		message: 'Invalid department ID "${id}"'
 	}
 };

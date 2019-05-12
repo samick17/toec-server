@@ -1,6 +1,10 @@
 module.exports = {
-	IDNotFound: {
+	IDNotNumber: {
 		code: 'TAX_01',
-		message: ''
+		message: 'Tax ID should be a number'
+	},
+	IDNotFound: {
+		code: 'TAX_02',
+		message: 'Invalid tax ID "${id}"'
 	}
 };

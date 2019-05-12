@@ -53,7 +53,7 @@ function validateToken(token, name, email) {
 	if(tokenInfo.email !== email) {
 		return {
 			isValid: false,
-			reason: UserError.InvalidEmail
+			reason: UserError.InvalidEmailFormat
 		};
 	}
 	return {

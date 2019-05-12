@@ -7,9 +7,9 @@ const RouteHandler = require('@Priv/route-handler');
 // TODO validate query params.
 router.get('/', async (ctx) => {
 	let {
-		page,
-		limit,
-		description_length
+		page = 1,
+		limit = 20,
+		description_length = 200
 	} = ctx.query;
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -26,10 +26,10 @@ router.get('/', async (ctx) => {
 router.get('/search', async (ctx) => {
 	let {
 		query_string,
-		all_words,
-		page,
-		limit,
-		description_length
+		all_words = 'on',
+		page = 1,
+		limit = 20,
+		description_length = 200
 	} = ctx.query;
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -69,7 +69,7 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		categoryId
 	} = ctx.params;
 	let {
-		page,
+		page = 1,
 		limit,
 		description_length
 	} = ctx.query;
@@ -98,7 +98,7 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		departmentId
 	} = ctx.params;
 	let {
-		page,
+		page = 1,
 		limit,
 		description_length
 	} = ctx.query;
@@ -184,8 +184,7 @@ router.get('/:productId/reviews', async (ctx) => {
 });
 
 router.post('/:productId/reviews', async (ctx) => {
-	// TODO get customerId by session
-	let customerId = 1;
+	let customerId = ctx.session.uid;
 	let {
 		productId
 	} = ctx.params;

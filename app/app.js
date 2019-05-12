@@ -6,12 +6,11 @@ const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const session = require('koa-session2');
 const redisStore = require('@Priv/redis-store');
+const api = require('@Route/api');
+const redisClient = require('@Priv/redis-client').client;
 const Env = require('@Env');
 
 function createApp() {
-	const api = require('@Route/api');
-	const redisClient = require('@Priv/redis-client').client;
-
 	const app = new Koa();
 	app.keys = [Env.TOEC_APP_KEY];
 	const SessionConfig = {

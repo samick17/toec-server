@@ -4,16 +4,18 @@ const OrdersError = require('@Priv/error/orders');
 const RouteHandler = require('@Priv/route-handler');
 
 router.post('/', async (ctx) => {
-	// TODO get customerId by session
-	let customerId = 1;
+	let customerId = ctx.session.uid;
 	let {
 		cart_id,
 		shipping_id,
 		tax_id
 	} = ctx.request.body;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.OrdersAPI.createOrders(customerId, cart_id, shipping_id, tax_id);
-	ctx.body = jsonData;
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.OrdersAPI.createOrders(customerId, cart_id, shipping_id, tax_id);
+		}
+	});
 });
 
 router.get('/:orderId', async (ctx) => {

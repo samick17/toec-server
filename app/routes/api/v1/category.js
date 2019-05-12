@@ -5,6 +5,11 @@ const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
 
 router.get('/', async (ctx) => {
+	let {
+		order,// one of {category_id, name}
+		page = 1,
+		limit = 20
+	} = ctx.query;
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

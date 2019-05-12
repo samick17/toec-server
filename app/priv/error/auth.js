@@ -1,10 +1,10 @@
 module.exports = {
 	EmptyCode: {
 		code: 'AUT_01',
-		message: ''
+		message: 'Authorization code is empty.'
 	},
 	Unauthorized: {
 		code: 'AUT_02',
-		message: ''
+		message: 'Access Unauthorized.'
 	}
 };

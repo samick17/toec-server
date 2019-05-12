@@ -18,7 +18,10 @@ describe('auth', () => {
 		});
 		let tokenInfo = Auth.validateToken(token, 'Samick1', 'Samick.Hsu@gmail.com');
 		assert.isFalse(tokenInfo.isValid);
-		assert.equal(tokenInfo.reason, 'InvalidName');
+		assert.deepEqual(tokenInfo.reason, {
+			code: 'USR_13',
+			message: 'Invalid name: "${name}"'
+		});
 	});
 
 	it('generateToken and validate with wrong email', async () => {
@@ -28,6 +31,9 @@ describe('auth', () => {
 		});
 		let tokenInfo = Auth.validateToken(token, 'Samick', 'Samick1.Hsu@gmail.com');
 		assert.isFalse(tokenInfo.isValid);
-		assert.equal(tokenInfo.reason, 'InvalidEmail');
+		assert.deepEqual(tokenInfo.reason, {
+			code: 'USR_03',
+			message: 'Email "${email}" format error.'
+		});
 	});
 });

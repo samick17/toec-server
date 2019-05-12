@@ -5,7 +5,7 @@ module.exports = {
 	},
 	FieldsRequired: {
 		code: 'USR_02',
-		message: ''
+		message: 'Fields "${fields}" is required'
 	},
 	InvalidEmailFormat: {
 		code: 'USR_03',
@@ -17,30 +17,50 @@ module.exports = {
 	},
 	EmailNotExists: {
 		code: 'USR_05',
-		message: 'Email "${email}" not found!'
+		message: 'Email "${email}" doesn\' exists.'
 	},
 	InvalidPhoneNumber: {
 		code: 'USR_06',
-		message: 'Invalid phone number.'
+		message: 'This is an invalid phone number. Please use correct one.'
 	},
 	FieldTooLong: {
 		code: 'USR_07',
-		message: 'Field "${field}" is too long.'
+		message: 'The field "${field}" is too long.'
 	},
 	InvalidCreditCard: {
 		code: 'USR_08',
-		message: 'Invalid credit card number "${cardId}".'
+		message: 'This is an invalid Credit Card: "${cardId}".'
 	},
 	InvalidShippingRegionID: {
 		code: 'USR_09',
-		message: 'Invalid shipping region id "${id}"'
+		message: 'This is an invalid Shipping Region ID: "${id}"'
 	},
 	InvalidToken: {
 		code: 'USR_10',
 		message: 'Invalid token: "${token}"'
 	},
-	InvalidUserID: {
+	TokenExpired: {
 		code: 'USR_11',
-		message: 'Invalid userId: "${userId}"'
+		message: 'Token is expired. Please login again."'
+	},
+	InvalidUserID: {
+		code: 'USR_12',
+		message: 'Invalid userId: "${uid}"'
+	},
+	InvalidName: {
+		code: 'USR_13',
+		message: 'Invalid name: "${name}"'
+	},
+	NameNotString: {
+		code: 'USR_14',
+		message: 'User name should be a string.'
+	},
+	NameOutOfRange: {
+		code: 'USR_15',
+		message: 'Length of user name should be 1 to 50.'
+	},
+	PasswordNotString: {
+		code: 'USR_16',
+		message: 'Password should be a string.'
 	}
 };
