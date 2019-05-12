@@ -1,6 +1,7 @@
 const DB = require('@DB');
 const router = require('koa-router')();
 const CategoryError = require('@Priv/error/category');
+const PaginationError = require('@Priv/error/pagination');
 const DepartmentError = require('@Priv/error/department');
 const ProductError = require('@Priv/error/product');
 const ErrorHandler = require('@Priv/error-handler');
@@ -12,9 +13,9 @@ router.get('/', async (ctx) => {
 		page = 1,
 		limit = 20
 	} = ctx.query;
-	Validator.validateStrEnum(order, ['category_id,ASC', 'category_id,DESC', 'name,ASC', 'name,DESC'], CategoryError, 'InvalidOrderFormat');
-	Validator.validateIntegerRange(page, 1, Infinity, CategoryError, 'PageNotNumber', 'PageOutOfRange');
-	Validator.validateIntegerRange(limit, 1, 500, CategoryError, 'LimitNotNumber', 'LimitOutOfRange');
+	Validator.validateStrEnum(order, ['category_id,ASC', 'category_id,DESC', 'name,ASC', 'name,DESC'], PaginationError, 'InvalidOrderFormat');
+	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
+	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

@@ -6,5 +6,9 @@ module.exports = {
 	IDNotFound: {
 		code: 'SCT_02',
 		message: 'Invalid cart ID "${id}"'
+	},
+	ItemIDNotNumber: {
+		code: 'SCT_03',
+		message: 'Item ID should be a number'
 	}
 };

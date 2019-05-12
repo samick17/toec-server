@@ -1,6 +1,7 @@
 const DB = require('@DB');
 const router = require('koa-router')();
 const ProductError = require('@Priv/error/product');
+const PaginationError = require('@Priv/error/pagination');
 const CategoryError = require('@Priv/error/category');
 const DepartmentError = require('@Priv/error/department');
 const ErrorHandler = require('@Priv/error-handler');
@@ -13,8 +14,8 @@ router.get('/', async (ctx) => {
 		limit = 20,
 		description_length = 200
 	} = ctx.query;
-	Validator.validateIntegerRange(page, 1, Infinity, ProductError, 'PageNotNumber', 'PageOutOfRange');
-	Validator.validateIntegerRange(limit, 1, 500, ProductError, 'LimitNotNumber', 'LimitOutOfRange');
+	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
+	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -39,8 +40,8 @@ router.get('/search', async (ctx) => {
 	Validator.requireArgs({
 		query_string
 	}, ProductError, 'EmptyQueryString');
-	Validator.validateIntegerRange(page, 1, Infinity, ProductError, 'PageNotNumber', 'PageOutOfRange');
-	Validator.validateIntegerRange(limit, 1, 500, ProductError, 'LimitNotNumber', 'LimitOutOfRange');
+	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
+	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -86,8 +87,8 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		description_length = 200
 	} = ctx.query;
 	Validator.validateInteger(categoryId, CategoryError, 'IDNotNumber');
-	Validator.validateIntegerRange(page, 1, Infinity, ProductError, 'PageNotNumber', 'PageOutOfRange');
-	Validator.validateIntegerRange(limit, 1, 500, ProductError, 'LimitNotNumber', 'LimitOutOfRange');
+	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
+	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -119,8 +120,8 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		description_length = 200
 	} = ctx.query;
 	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
-	Validator.validateIntegerRange(page, 1, Infinity, ProductError, 'PageNotNumber', 'PageOutOfRange');
-	Validator.validateIntegerRange(limit, 1, 500, ProductError, 'LimitNotNumber', 'LimitOutOfRange');
+	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
+	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
