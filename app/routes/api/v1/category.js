@@ -1,62 +1,76 @@
 const DB = require('@DB');
 const router = require('koa-router')();
+const CategoryError = require('@Priv/error/category');
 const ErrorHandler = require('@Priv/error-handler');
+const RouteHandler = require('@Priv/route-handler');
 
 router.get('/', async (ctx) => {
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategories();
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: 'categories'
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.CategoryAPI.getCategories();
+		}
+	});
 });
 
 router.get('/:categoryId', async (ctx) => {
 	let {
 		categoryId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategoryById(categoryId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `category:${categoryId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.CategoryAPI.getCategoryById(categoryId);
+		},
+		onError: () => {
+			return {
+				code: CategoryError.IDNotFound,
+				args: {
+					id: categoryId
+				}
+			};
+		}
+	});
 });
 
 router.get('/inProduct/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategoriesOfProduct(productId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `inProduct:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.CategoryAPI.getCategoriesOfProduct(productId);
+		},
+		onError: () => {
+			return {
+				code: CategoryError.InvalidProductID,
+				args: {
+					productId: productId
+				}
+			};
+		}
+	});
 });
 
 router.get('/inDepartment/:departmentId', async (ctx) => {
 	let {
 		departmentId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CategoryAPI.getCategoriesOfDepartment(departmentId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `inDepartment:${departmentId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.CategoryAPI.getCategoriesOfDepartment(departmentId);
+		},
+		onError: () => {
+			return {
+				code: CategoryError.InvalidDepartmentID,
+				args: {
+					departmentId: departmentId
+				}
+			};
+		}
+	});
 });
 
 module.exports = router;

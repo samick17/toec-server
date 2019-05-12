@@ -53,6 +53,12 @@ router.post('/facebook', async (ctx) => {
 	ctx.body = {};
 });
 
+router.get('/logout', async (ctx) => {
+	// console.log(ctx.session);
+	ctx.session = null;
+	ctx.body = {};
+});
+
 router.put('/address', async (ctx) => {
 	// TODO get customerId by session
 	let customerId = 1;

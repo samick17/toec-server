@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const UserError = require('./error/user');
 const PrivateKey = fs.readFileSync(path.join(__dirname, '../env/private.key'));
 
 async function generateToken(tokenInfo, tokenOpts) {
@@ -26,37 +27,38 @@ function validateToken(token, name, email) {
 	if(typeof token !== 'string') {
 		return {
 			isValid: false,
-			reason: 'InvalidToken'
+			reason: UserError.InvalidToken
 		};
 	}
 	let tokenInfo = getTokenInfo(token);
 	if(tokenInfo === null) {
 		return {
 			isValid: false,
-			reason: 'InvalidToken'
+			reason: UserError.InvalidToken
 		};
 	}
 	let timestamp = Date.now();
 	if(isExpired(timestamp, tokenInfo)) {
 		return {
 			isValid: false,
-			reason: 'TokenExpired'
+			reason: UserError.TokenExpired
 		};
 	}
 	if(tokenInfo.name !== name) {
 		return {
 			isValid: false,
-			reason: 'InvalidName'
+			reason: UserError.InvalidName
 		};
 	}
 	if(tokenInfo.email !== email) {
 		return {
 			isValid: false,
-			reason: 'InvalidEmail'
+			reason: UserError.InvalidEmail
 		};
 	}
 	return {
-		isValid: true
+		isValid: true,
+		info: tokenInfo
 	};
 }
 

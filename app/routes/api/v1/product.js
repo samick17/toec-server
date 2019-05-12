@@ -1,6 +1,8 @@
 const DB = require('@DB');
 const router = require('koa-router')();
+const ProductError = require('@Priv/error/product');
 const ErrorHandler = require('@Priv/error-handler');
+const RouteHandler = require('@Priv/route-handler');
 
 // TODO validate query params.
 router.get('/', async (ctx) => {
@@ -9,19 +11,16 @@ router.get('/', async (ctx) => {
 		limit,
 		description_length
 	} = ctx.query;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProducts({
-		page: parseInt(page),
-		limit: parseInt(limit),
-		descriptionLength: parseInt(description_length)
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProducts({
+				page: parseInt(page),
+				limit: parseInt(limit),
+				descriptionLength: parseInt(description_length)
+			});
+		}
 	});
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: 'products'
-		});
-	}
 });
 
 router.get('/search', async (ctx) => {
@@ -32,35 +31,37 @@ router.get('/search', async (ctx) => {
 		limit,
 		description_length
 	} = ctx.query;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.searchProducts(query_string, {
-		allWords: ['on', 'off'].indexOf(all_words) >= 0 ? all_words : 'on',
-		page: parseInt(page),
-		limit: parseInt(limit),
-		descriptionLength: parseInt(description_length)
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.searchProducts(query_string, {
+				allWords: ['on', 'off'].indexOf(all_words) >= 0 ? all_words : 'on',
+				page: parseInt(page),
+				limit: parseInt(limit),
+				descriptionLength: parseInt(description_length)
+			});
+		}
 	});
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: 'products'
-		});
-	}
 });
 
 router.get('/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProductById(productId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `product:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProductById(productId);
+		},
+		onError: () => {
+			return {
+				code: ProductError.IDNotFound,
+				args: {
+					id: productId
+				}
+			};
+		}
+	});
 });
 
 router.get('/inCategory/:categoryId', async (ctx) => {
@@ -72,19 +73,24 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		limit,
 		description_length
 	} = ctx.query;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProductsByCategoryId(categoryId, {
-		page: parseInt(page),
-		limit: parseInt(limit),
-		descriptionLength: parseInt(description_length)
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProductsByCategoryId(categoryId, {
+				page: parseInt(page),
+				limit: parseInt(limit),
+				descriptionLength: parseInt(description_length)
+			});
+		},
+		onError: () => {
+			return {
+				code: ProductError.InvalidCategoryID,
+				args: {
+					categoryId: categoryId
+				}
+			};
+		}
 	});
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `category:${categoryId}`
-		});
-	}
 });
 
 router.get('/inDepartment/:departmentId', async (ctx) => {
@@ -96,19 +102,24 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		limit,
 		description_length
 	} = ctx.query;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProductsByDepartmentId(departmentId, {
-		page: parseInt(page),
-		limit: parseInt(limit),
-		descriptionLength: parseInt(description_length)
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProductsByDepartmentId(departmentId, {
+				page: parseInt(page),
+				limit: parseInt(limit),
+				descriptionLength: parseInt(description_length)
+			});
+		},
+		onError: () => {
+			return {
+				code: ProductError.InvalidDepartmentID,
+				args: {
+					departmentId: departmentId
+				}
+			};
+		}
 	});
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `department:${departmentId}`
-		});
-	}
 });
 
 //
@@ -116,45 +127,60 @@ router.get('/:productId/details', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProductDetailById(productId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `product:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProductDetailById(productId);
+		},
+		onError: () => {
+			return {
+				code: ProductError.IDNotFound,
+				args: {
+					id: productId
+				}
+			};
+		}
+	});
 });
 
 router.get('/:productId/locations', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProductLocations(productId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `product:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProductLocations(productId);
+		},
+		onError: () => {
+			return {
+				code: ProductError.IDNotFound,
+				args: {
+					id: productId
+				}
+			};
+		}
+	});
 });
 
 router.get('/:productId/reviews', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.getProductReviewById(productId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `product:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.getProductReviewById(productId);
+		},
+		onError: () => {
+			return {
+				code: ProductError.IDNotFound,
+				args: {
+					id: productId
+				}
+			};
+		}
+	});
 });
 
 router.post('/:productId/reviews', async (ctx) => {
@@ -167,15 +193,20 @@ router.post('/:productId/reviews', async (ctx) => {
 		review,
 		rating
 	} = ctx.request.body;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ProductAPI.createProductReview(customerId, productId, review, rating);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `product:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.ProductAPI.createProductReview(customerId, productId, review, rating);
+		},
+		onError: () => {
+			return {
+				code: ProductError.IDNotFound,
+				args: {
+					id: productId
+				}
+			};
+		}
+	});
 });
 
 module.exports = router;

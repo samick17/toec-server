@@ -1,4 +1,7 @@
+const DB = require('@DB');
 const router = require('koa-router')();
+const OrdersError = require('@Priv/error/orders');
+const RouteHandler = require('@Priv/route-handler');
 
 router.post('/', async (ctx) => {
 	// TODO get customerId by session
@@ -17,9 +20,20 @@ router.get('/:orderId', async (ctx) => {
 	let {
 		orderId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.OrdersAPI.getOrderDetails(orderId);
-	ctx.body = jsonData;
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.OrdersAPI.getOrderDetails(orderId);
+		},
+		onError: () => {
+			return {
+				code: OrdersError.IDNotFound,
+				args: {
+					id: orderId
+				}
+			};
+		}
+	});
 });
 
 // TODO
@@ -31,9 +45,20 @@ router.get('/shortDetail/:orderId', async (ctx) => {
 	let {
 		orderId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.OrdersAPI.getOrdersShortDetail(orderId);
-	ctx.body = jsonData;
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.OrdersAPI.getOrdersShortDetail(orderId);
+		},
+		onError: () => {
+			return {
+				code: OrdersError.IDNotFound,
+				args: {
+					id: orderId
+				}
+			};
+		}
+	});
 });
 
 module.exports = router;

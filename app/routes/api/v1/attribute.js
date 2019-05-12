@@ -1,62 +1,76 @@
 const DB = require('@DB');
 const router = require('koa-router')();
+const AttributeError = require('@Priv/error/attribute');
 const ErrorHandler = require('@Priv/error-handler');
+const RouteHandler = require('@Priv/route-handler');
 
 router.get('/', async (ctx) => {
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.AttributeAPI.getAttributes();
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: 'departments'
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.AttributeAPI.getAttributes();
+		}
+	});
 });
 
 router.get('/:attributeId', async (ctx) => {
 	let {
 		attributeId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.AttributeAPI.getAttributeById(attributeId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: attributeId
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.AttributeAPI.getAttributeById(attributeId);
+		},
+		onError: () => {
+			return {
+				code: AttributeError.IDNotFound,
+				args: {
+					id: attributeId
+				}
+			};
+		}
+	});
 });
 
 router.get('/values/:attributeId', async (ctx) => {
 	let {
 		attributeId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.AttributeAPI.getAttributeValues(attributeId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `values:${attributeId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.AttributeAPI.getAttributeValues(attributeId);
+		},
+		onError: () => {
+			return {
+				code: AttributeError.IDNotFound,
+				args: {
+					id: attributeId
+				}
+			};
+		}
+	});
 });
 
 router.get('/inProduct/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
-	let APIs = DB.getAPIs();
-	let jsonData = await APIs.AttributeAPI.getAttributesWithProductId(productId);
-	if(jsonData) {
-		ctx.body = jsonData;
-	} else {
-		ErrorHandler.handle('NotFound', {
-			name: `inProduct:${productId}`
-		});
-	}
+	await RouteHandler.handleModel(ctx, {
+		onData: async () => {
+			let APIs = DB.getAPIs();
+			return await APIs.AttributeAPI.getAttributesWithProductId(productId);
+		},
+		onError: () => {
+			return {
+				code: AttributeError.InvalidProductID,
+				args: {
+					productId: productId
+				}
+			};
+		}
+	});
 });
 
 module.exports = router;
