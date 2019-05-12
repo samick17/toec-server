@@ -14,8 +14,6 @@ function createApp() {
 
 	const app = new Koa();
 	app.keys = [Env.TOEC_APP_KEY];
-	const redisName = Env.REDIS_NAME || '127.0.0.1';
-	const redisPort = Env.REDIS_PORT || 6379;
 	const SessionConfig = {
 		key: Env.TOEC_COOKIE_KEY,
 		maxAge: 86400000,

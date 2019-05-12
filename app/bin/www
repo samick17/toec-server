@@ -56,10 +56,12 @@ function launch(app, host, port) {
     logger.log(`Listening on ${addr.address}:${addr.port}`);
   }
 }
-function main() {
+async function main() {
+  await DB.init();
   let app = App.createApp();
   launch(app, Env.HOST, Env.PORT);
-  DB.init();
 }
 
-main();
+if(module.id === '.') {
+  main();
+}

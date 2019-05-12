@@ -3,3 +3,4 @@ node_modules
 /app/env/.env
 /app/env/private.key
 /app/test.js
+data
