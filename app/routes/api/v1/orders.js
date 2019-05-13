@@ -2,6 +2,7 @@ const DB = require('@DB');
 const router = require('koa-router')();
 const OrdersError = require('@Priv/error/orders');
 const RouteHandler = require('@Priv/route-handler');
+const Validator = require('@Priv/validator');
 
 router.post('/', async (ctx) => {
 	let customerId = await RouteUtils.auth(ctx);

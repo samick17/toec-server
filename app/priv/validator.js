@@ -1,6 +1,8 @@
 const ErrorHandler = require('./error-handler');
 
 const reEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const rePhone = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+const reMobPhone = /^\+[1-9]{1}[0-9]{3,14}$/;
 
 function requireArgs(object, errorCodes, errorKey) {
 	let fields = [];
@@ -23,14 +25,26 @@ function isInt(num) {
 
 function validateEmail(email, errorCodes, errorKey) {
 	if(!reEmail.exec(email)) {
-		ErrorHandler.handle(errorCodes[errorKey || 'InvalidEmailFormat'], {
+		ErrorHandler.handle(errorCodes[errorKey], {
 			email: email
 		});
 	}
 }
 
 function validatePhoneNumber(phoneNumber) {
+	if(!rePhone.exec(phoneNumber)) {
+		ErrorHandler.handle(errorCodes[errorKey], {
+			phoneNumber: phoneNumber
+		});
+	}
+}
 
+function validateMobPhoneNumber(phoneNumber, errorCodes, errorKey) {
+	if(!reMobPhone.exec(phoneNumber)) {
+		ErrorHandler.handle(errorCodes[errorKey], {
+			phoneNumber: phoneNumber
+		});
+	}
 }
 
 function validateCreditCard(creditCard) {
@@ -38,7 +52,7 @@ function validateCreditCard(creditCard) {
 }
 
 function validateInteger(num, errorCodes, errorKey) {
-	if(typeof num !== 'number' && isInt(num)) {
+	if(typeof num !== 'number' || !isInt(num)) {
 		ErrorHandler.handle(errorCodes[errorKey || 'NotNumber']);
 	}
 }

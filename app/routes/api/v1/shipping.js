@@ -3,6 +3,7 @@ const router = require('koa-router')();
 const ShippingError = require('@Priv/error/shipping');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
+const Validator = require('@Priv/validator');
 
 router.get('/regions', async (ctx) => {
 	await RouteHandler.handleModel(ctx, {

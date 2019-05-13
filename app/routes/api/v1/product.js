@@ -6,6 +6,7 @@ const CategoryError = require('@Priv/error/category');
 const DepartmentError = require('@Priv/error/department');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
+const Validator = require('@Priv/validator');
 
 // TODO validate query params.
 router.get('/', async (ctx) => {
@@ -14,6 +15,9 @@ router.get('/', async (ctx) => {
 		limit = 20,
 		description_length = 200
 	} = ctx.query;
+	page = parseInt(page);
+	limit = parseInt(limit);
+	description_length = parseInt(description_length);
 	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
 	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
@@ -21,9 +25,9 @@ router.get('/', async (ctx) => {
 		onData: async () => {
 			let APIs = DB.getAPIs();
 			return await APIs.ProductAPI.getProducts({
-				page: parseInt(page),
-				limit: parseInt(limit),
-				descriptionLength: parseInt(description_length)
+				page: page,
+				limit: limit,
+				descriptionLength: description_length
 			});
 		}
 	});
@@ -40,6 +44,9 @@ router.get('/search', async (ctx) => {
 	Validator.requireArgs({
 		query_string
 	}, ProductError, 'EmptyQueryString');
+	page = parseInt(page);
+	limit = parseInt(limit);
+	description_length = parseInt(description_length);
 	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
 	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
@@ -48,9 +55,9 @@ router.get('/search', async (ctx) => {
 			let APIs = DB.getAPIs();
 			return await APIs.ProductAPI.searchProducts(query_string, {
 				allWords: ['on', 'off'].indexOf(all_words) >= 0 ? all_words : 'on',
-				page: parseInt(page),
-				limit: parseInt(limit),
-				descriptionLength: parseInt(description_length)
+				page: page,
+				limit: limit,
+				descriptionLength: description_length
 			});
 		}
 	});
@@ -87,6 +94,9 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		description_length = 200
 	} = ctx.query;
 	Validator.validateInteger(categoryId, CategoryError, 'IDNotNumber');
+	page = parseInt(page);
+	limit = parseInt(limit);
+	description_length = parseInt(description_length);
 	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
 	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
@@ -94,9 +104,9 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		onData: async () => {
 			let APIs = DB.getAPIs();
 			return await APIs.ProductAPI.getProductsByCategoryId(categoryId, {
-				page: parseInt(page),
-				limit: parseInt(limit),
-				descriptionLength: parseInt(description_length)
+				page: page,
+				limit: limit,
+				descriptionLength: description_length
 			});
 		},
 		onError: () => {
@@ -120,6 +130,9 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		description_length = 200
 	} = ctx.query;
 	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
+	page = parseInt(page);
+	limit = parseInt(limit);
+	description_length = parseInt(description_length);
 	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
 	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	Validator.validateIntegerRange(description_length, 1, Infinity, ProductError, 'DescLenNotNumber', 'DescLenOutOfRange');
@@ -127,9 +140,9 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		onData: async () => {
 			let APIs = DB.getAPIs();
 			return await APIs.ProductAPI.getProductsByDepartmentId(departmentId, {
-				page: parseInt(page),
-				limit: parseInt(limit),
-				descriptionLength: parseInt(description_length)
+				page: page,
+				limit: limit,
+				descriptionLength: description_length
 			});
 		},
 		onError: () => {
@@ -220,7 +233,8 @@ router.post('/:productId/reviews', async (ctx) => {
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	Validator.requireArgs({
 		review, rating
-	}, ProductError, 'EmptyQueryString');
+	}, ProductError, 'FieldsRequired');
+	rating = parseInt(rating);
 	Validator.validateStrLenRange(review, 1, 2048, ProductError, 'ReviewNotString', 'ReviewOutOfRange');
 	Validator.validateIntegerRange(rating, 1, 10, ProductError, 'RatingNotNumber', 'RatingOutOfRange');
 	await RouteHandler.handleModel(ctx, {

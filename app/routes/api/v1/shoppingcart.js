@@ -3,6 +3,7 @@ const router = require('koa-router')();
 const ShoppingCartError = require('@Priv/error/shopping-cart');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
+const Validator = require('@Priv/validator');
 
 router.get('/generateUniqueId', async (ctx) => {
 	let APIs = DB.getAPIs();
@@ -18,6 +19,9 @@ router.post('/add', async (ctx) => {
 		product_id,
 		attributes
 	} = ctx.request.body;
+	Validator.requireArgs({
+		cart_id, product_id, attributes
+	}, ShoppingCartError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.ShoppingCartAPI.addProductToCart(cart_id, product_id, attributes);
 	ctx.body = jsonData;
@@ -27,6 +31,9 @@ router.get('/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
+	Validator.requireArgs({
+		cartId
+	}, ShoppingCartError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.ShoppingCartAPI.getCartById(cartId);
 	ctx.body = jsonData;
@@ -39,7 +46,9 @@ router.put('/update/:itemId', async (ctx) => {
 	let {
 		itemId
 	} = ctx.params;
+	itemId = parseInt(itemId);
 	Validator.validateInteger(itemId, ShoppingCartError, 'ItemIDNotNumber');
+	Validator.validateInteger(quantity, ShoppingCartError, 'QuantityNotNumber');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.ShoppingCartAPI.updateCartById(itemId, quantity);
 	ctx.body = jsonData;
@@ -49,7 +58,9 @@ router.delete('/empty/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	Validator.validateInteger(cartId, ShoppingCartError, 'IDNotNumber');
+	Validator.requireArgs({
+		cartId
+	}, ShoppingCartError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.ShoppingCartAPI.emptyCart(cartId);
 	ctx.body = jsonData;
@@ -61,6 +72,7 @@ router.get('/moveToCart/:itemId', async (ctx) => {
 	let {
 		itemId
 	} = ctx.params;
+	itemId = parseInt(itemId);
 	Validator.validateInteger(itemId, ShoppingCartError, 'ItemIDNotNumber');
 	let APIs = DB.getAPIs();
 	let newId = await APIs.ShoppingCartAPI.moveProductToCart(itemId, cartId);
@@ -71,7 +83,9 @@ router.get('/totalAmount/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	Validator.validateInteger(cartId, ShoppingCartError, 'IDNotNumber');
+	Validator.requireArgs({
+		cartId
+	}, ShoppingCartError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.ShoppingCartAPI.getAmountOfCart(cartId);
 	ctx.body = jsonData;
@@ -82,6 +96,8 @@ router.get('/saveForLater/:itemId', async (ctx) => {
 	let {
 		itemId
 	} = ctx.params;
+	itemId = parseInt(itemId);
+	console.log(`ItemId: "${itemId}"`);
 	Validator.validateInteger(itemId, ShoppingCartError, 'ItemIDNotNumber');
 	ctx.body = {};
 });
@@ -91,7 +107,9 @@ router.get('/getSaved/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	Validator.validateInteger(cartId, ShoppingCartError, 'IDNotNumber');
+	Validator.requireArgs({
+		cartId
+	}, ShoppingCartError, 'FieldsRequired');
 	ctx.body = {};
 });
 
@@ -99,6 +117,7 @@ router.delete('/removeProduct/:itemId', async (ctx) => {
 	let {
 		itemId
 	} = ctx.params;
+	itemId = parseInt(itemId);
 	Validator.validateInteger(itemId, ShoppingCartError, 'ItemIDNotNumber');
 	let APIs = DB.getAPIs();
 	let newId = await APIs.ShoppingCartAPI.removeProductFromCart(itemId);

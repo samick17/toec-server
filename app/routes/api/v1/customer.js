@@ -14,6 +14,18 @@ router.put('/', async (ctx) => {
 		eve_phone,
 		mob_phone
 	} = ctx.request.body;
+	Validator.requireArgs({
+		name, email
+	}, UserError, 'FieldsRequired');
+	if(typeof day_phone === 'string') {
+		Validator.validatePhoneNumber(day_phone, UserError, 'PhoneFormatError');
+	}
+	if(typeof eve_phone === 'string') {
+		Validator.validatePhoneNumber(eve_phone, UserError, 'PhoneFormatError');
+	}
+	if(typeof mob_phone === 'string') {
+		Validator.validateMobPhoneNumber(mob_phone, UserError, 'MobPhoneFormatError');
+	}
 	let APIs = DB.getAPIs();
 	let jsonData = await APIs.CustomerAPI.updateProfile(customerId, name, email, {
 		password,

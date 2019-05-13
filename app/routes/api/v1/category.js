@@ -6,14 +6,17 @@ const DepartmentError = require('@Priv/error/department');
 const ProductError = require('@Priv/error/product');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
+const Validator = require('@Priv/validator');
 
 router.get('/', async (ctx) => {
 	let {
-		order,// one of {category_id, name}
+		order = '',// one of {category_id, name}
 		page = 1,
 		limit = 20
 	} = ctx.query;
-	Validator.validateStrEnum(order, ['category_id,ASC', 'category_id,DESC', 'name,ASC', 'name,DESC'], PaginationError, 'InvalidOrderFormat');
+	page = parseInt(page);
+	limit = parseInt(limit);
+	Validator.validateStrEnum(order, ['', 'category_id,ASC', 'category_id,DESC', 'name,ASC', 'name,DESC'], PaginationError, 'InvalidOrderFormat');
 	Validator.validateIntegerRange(page, 1, Infinity, PaginationError, 'PageNotNumber', 'PageOutOfRange');
 	Validator.validateIntegerRange(limit, 1, 500, PaginationError, 'LimitNotNumber', 'LimitOutOfRange');
 	await RouteHandler.handleModel(ctx, {

@@ -78,6 +78,19 @@ describe('auth', () => {
 					message: 'Id should be a number'
 				}
 			}, 'IDNotNumber');
+			assert.fail('Error not raised');
+		} catch(err) {
+			assert.equal(err.code, '0x0001');
+			assert.equal(err.message, 'Id should be a number');
+		}
+		try {
+			Validator.validateInteger(NaN, {
+				IDNotNumber: {
+					code: '0x0001',
+					message: 'Id should be a number'
+				}
+			}, 'IDNotNumber');
+			assert.fail('Error not raised');
 		} catch(err) {
 			assert.equal(err.code, '0x0001');
 			assert.equal(err.message, 'Id should be a number');

@@ -1,5 +1,6 @@
 const router = require('koa-router')();
 const StripeError = require('@Priv/error/stripe');
+const Validator = require('@Priv/validator');
 
 router.post('/charge', async (ctx) => {
 	let {

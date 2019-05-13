@@ -42,5 +42,9 @@ module.exports = {
 	RatingOutOfRange: {
 		code: 'PRD_11',
 		message: 'Rating out of range'
+	},
+	FieldsRequired: {
+		code: 'PRD_12',
+		message: 'Fields "${fields}" is required by product review.'
 	}
 };

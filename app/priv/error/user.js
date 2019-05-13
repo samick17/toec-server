@@ -62,5 +62,9 @@ module.exports = {
 	PasswordNotString: {
 		code: 'USR_16',
 		message: 'Password should be a string.'
+	},
+	ShippingRegionIDNotNumber: {
+		code: 'USR_17',
+		message: 'ShippingRegionID should be a number'
 	}
 };

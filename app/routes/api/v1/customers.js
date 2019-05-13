@@ -67,8 +67,9 @@ router.put('/address', async (ctx) => {
 	Validator.requireArgs({
 		address_1, city, region, postal_code, country, shipping_region_id
 	}, UserError, 'FieldsRequired');
+	Validator.validateInteger(shipping_region_id, UserError, 'ShippingRegionIDNotNumber');
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.CustomerAPI.updateAddress(customerId, address_1, city, region, postal_code, country, shipping_region_id);
+	let jsonData = await APIs.CustomerAPI.updateAddress(customerId, address_1, city, region, postal_code, country, shipping_region_id, {address_2});
 	ctx.body = jsonData;
 });
 

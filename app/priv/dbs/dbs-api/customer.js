@@ -32,10 +32,10 @@ function init(seq, APIs) {
 				name: name,
 				email: email,
 			};
-			if(password) newData.password = await Encryptor.encrypt(password);
-			if(day_phone) newData.day_phone = day_phone;
-			if(eve_phone) newData.eve_phone = eve_phone;
-			if(mob_phone) newData.mob_phone = mob_phone;
+			if(typeof password === 'string') newData.password = await Encryptor.encrypt(password);
+			if(typeof day_phone === 'string') newData.day_phone = day_phone;
+			if(typeof eve_phone === 'string') newData.eve_phone = eve_phone;
+			if(typeof mob_phone === 'string') newData.mob_phone = mob_phone;
 			await Customer.update(newData, {
 				where: {
 					customer_id: customerId

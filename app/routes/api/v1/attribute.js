@@ -4,6 +4,7 @@ const AttributeError = require('@Priv/error/attribute');
 const ProductError = require('@Priv/error/product');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
+const Validator = require('@Priv/validator');
 
 router.get('/', async (ctx) => {
 	await RouteHandler.handleModel(ctx, {
