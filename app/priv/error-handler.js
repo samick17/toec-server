@@ -7,8 +7,9 @@ function fmt(text, args) {
 }
 
 class CustomError extends Error {
-	constructor(code, message) {
+	constructor(code, message, status) {
 		super(message);
+		this.status = status;
 		this.code = code;
 	}
 
@@ -31,7 +32,7 @@ class CustomError extends Error {
 
 function handle(errCodeData, args) {
 	errCodeData = errCodeData || ErrorCodes.Default.Unhandled;
-	throw new CustomError(errCodeData.code, fmt(errCodeData.message, args || {}));
+	throw new CustomError(errCodeData.code, fmt(errCodeData.message, args || {}), 400);
 }
 
 module.exports = {

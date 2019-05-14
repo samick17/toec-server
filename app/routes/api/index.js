@@ -9,13 +9,6 @@ const apiRoute = require('./v1');
 const APIVersion = 'v1';
 const ExportedAPIPath = '';
 
-const allowedOrigins = [
-	'http://127.0.0.1:53301',
-	'http://localhost:53301',
-	'https://127.0.0.1:53301',
-	'https://localhost:53301'
-];
-
 router.use(async (ctx, next) => {
 	try {
 		await next();
@@ -29,25 +22,39 @@ router.use(async (ctx, next) => {
 	}
 });
 
-const APIHandlerProd = async (ctx, next) => {
-	await next();
-};
+if(process.env !== 'production') {
+	const allowedOrigins = [
+		'http://127.0.0.1:53301',
+		'http://localhost:53301',
+		'https://127.0.0.1:53301',
+		'https://localhost:53301'
+	];
+	router.use(ExportedAPIPath, async (ctx, next) => {
+		let origin = ctx.headers.origin;
+		if(allowedOrigins.indexOf(origin) >= 0) {
+			ctx.set('Access-Control-Allow-Credentials', true);
+			ctx.set('Access-Control-Allow-Origin', origin);
+			await next();
+		} else {
+			throw new Error('Invalid request');
+		}
+	});
 
-const APIHandlerDev = async (ctx, next) => {
-	let origin = ctx.headers.origin;
-	console.log(origin);
-	if(allowedOrigins.indexOf(origin) >= 0) {
-		ctx.set('Access-Control-Allow-Origin', '*');
-		console.log('asdsd');
-	}
-	ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-	ctx.set('Access-Control-Allow-Credentials', true);
-	await next();
-};
+	router.options('*', async (ctx, next) => {
+		let origin = ctx.headers.origin;
+		if(allowedOrigins.indexOf(origin) >= 0) {
+			ctx.set('Access-Control-Allow-Credentials', true);
+			ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			ctx.set('Access-Control-Allow-Origin', origin);
+			ctx.set('Access-Control-Allow-Headers', ctx.get('Access-Control-Request-Headers'));
+			ctx.status = 204;
+			await next();
+		} else {
+			throw new Error('Invalid request');
+		}
+	});
+}
 
-// const APIHandler = process.env === 'production' ? APIHandlerProd : APIHandlerDev;
-const APIHandler = APIHandlerProd;
-
-router.use(ExportedAPIPath, APIHandler, apiRoute.routes());
+router.use(ExportedAPIPath, apiRoute.routes());
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const Auth = require('./auth');
 const ErrorHandler = require('./error-handler');
+const UserError = require('./error/user');
 
 async function auth(ctx) {
 	return ctx.session.uid || await (async () => {
