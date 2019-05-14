@@ -10,8 +10,10 @@ const APIVersion = 'v1';
 const ExportedAPIPath = '';
 
 const allowedOrigins = [
-	'127.0.0.1:53301',
-	'localhost:53301'
+	'http://127.0.0.1:53301',
+	'http://localhost:53301',
+	'https://127.0.0.1:53301',
+	'https://localhost:53301'
 ];
 
 router.use(async (ctx, next) => {
@@ -27,14 +29,25 @@ router.use(async (ctx, next) => {
 	}
 });
 
-router.use(ExportedAPIPath, async (ctx, next) => {
-	let origin = ctx.headers.host;
+const APIHandlerProd = async (ctx, next) => {
+	await next();
+};
+
+const APIHandlerDev = async (ctx, next) => {
+	let origin = ctx.headers.origin;
+	console.log(origin);
 	if(allowedOrigins.indexOf(origin) >= 0) {
-		ctx.set('Access-Control-Allow-Origin', origin);
+		ctx.set('Access-Control-Allow-Origin', '*');
+		console.log('asdsd');
 	}
 	ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	ctx.set('Access-Control-Allow-Credentials', true);
 	await next();
-}, apiRoute.routes());
+};
+
+// const APIHandler = process.env === 'production' ? APIHandlerProd : APIHandlerDev;
+const APIHandler = APIHandlerProd;
+
+router.use(ExportedAPIPath, APIHandler, apiRoute.routes());
 
 module.exports = router;

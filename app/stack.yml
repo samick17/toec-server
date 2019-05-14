@@ -1,10 +1,14 @@
 version: "3.7"
 services:
+  redis:
+    image: redis:alpine
+    volumes:
+      - ../data/redis/:/data
+    entrypoint: redis-server --appendonly yes
   api:
     image: toec_server:latest
     env_file:
       - ./env/.env
-    restart: always
     volumes:
       - .:/usr/app
     ports:
