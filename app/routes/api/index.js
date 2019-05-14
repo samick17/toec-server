@@ -22,7 +22,7 @@ router.use(async (ctx, next) => {
 	}
 });
 
-if(process.env !== 'production') {
+if(process.env.NODE_ENV !== 'production') {
 	const allowedOrigins = [
 		'http://127.0.0.1:53301',
 		'http://localhost:53301',
