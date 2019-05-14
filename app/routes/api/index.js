@@ -35,15 +35,18 @@ const APIHandlerProd = async (ctx, next) => {
 
 const APIHandlerDev = async (ctx, next) => {
 	let origin = ctx.headers.origin;
+	console.log(origin);
 	if(allowedOrigins.indexOf(origin) >= 0) {
-		ctx.set('Access-Control-Allow-Origin', origin);
+		ctx.set('Access-Control-Allow-Origin', '*');
+		console.log('asdsd');
 	}
 	ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	ctx.set('Access-Control-Allow-Credentials', true);
 	await next();
 };
 
-const APIHandler = process.env === 'production' ? APIHandlerProd : APIHandlerDev;
+// const APIHandler = process.env === 'production' ? APIHandlerProd : APIHandlerDev;
+const APIHandler = APIHandlerProd;
 
 router.use(ExportedAPIPath, APIHandler, apiRoute.routes());
 
