@@ -22,38 +22,45 @@ router.use(async (ctx, next) => {
 	}
 });
 
-if(process.env.NODE_ENV !== 'production') {
-	const allowedOrigins = [
-		'http://127.0.0.1:53301',
-		'http://localhost:53301',
-		'https://127.0.0.1:53301',
-		'https://localhost:53301'
-	];
-	router.use(ExportedAPIPath, async (ctx, next) => {
-		let origin = ctx.headers.origin;
-		if(allowedOrigins.indexOf(origin) >= 0) {
-			ctx.set('Access-Control-Allow-Credentials', true);
-			ctx.set('Access-Control-Allow-Origin', origin);
-			await next();
-		} else {
-			throw new Error('Invalid request');
-		}
-	});
+let AllowedOrigins;
 
-	router.options('*', async (ctx, next) => {
-		let origin = ctx.headers.origin;
-		if(allowedOrigins.indexOf(origin) >= 0) {
-			ctx.set('Access-Control-Allow-Credentials', true);
-			ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-			ctx.set('Access-Control-Allow-Origin', origin);
-			ctx.set('Access-Control-Allow-Headers', ctx.get('Access-Control-Request-Headers'));
-			ctx.status = 204;
-			await next();
-		} else {
-			throw new Error('Invalid request');
-		}
-	});
+if(process.env.NODE_ENV === 'production') {
+	AllowedOrigins = [
+	'https://toec.tectronix.net'
+	];
+} else {
+	AllowedOrigins = [
+	'http://127.0.0.1:53301',
+	'http://localhost:53301',
+	'https://127.0.0.1:53301',
+	'https://localhost:53301'
+	];
 }
+
+router.use(ExportedAPIPath, async (ctx, next) => {
+	let origin = ctx.headers.origin;
+	if(AllowedOrigins.indexOf(origin) >= 0) {
+		ctx.set('Access-Control-Allow-Credentials', true);
+		ctx.set('Access-Control-Allow-Origin', origin);
+		await next();
+	} else {
+		throw new Error('Invalid request');
+	}
+});
+
+router.options('*', async (ctx, next) => {
+	let origin = ctx.headers.origin;
+	if(AllowedOrigins.indexOf(origin) >= 0) {
+		ctx.set('Access-Control-Allow-Credentials', true);
+		ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+		ctx.set('Access-Control-Allow-Origin', origin);
+		ctx.set('Access-Control-Allow-Headers', ctx.get('Access-Control-Request-Headers'));
+		ctx.status = 204;
+		await next();
+	} else {
+		throw new Error('Invalid request');
+	}
+});
 
 router.use(ExportedAPIPath, apiRoute.routes());
 
