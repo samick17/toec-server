@@ -18,6 +18,7 @@ router.get('/regions/:shippingRegionId', async (ctx) => {
 	let {
 		shippingRegionId
 	} = ctx.params;
+	shippingRegionId = parseInt(shippingRegionId);
 	Validator.validateInteger(shippingRegionId, ShippingError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {

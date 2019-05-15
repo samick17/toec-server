@@ -31,6 +31,7 @@ router.get('/:categoryId', async (ctx) => {
 	let {
 		categoryId
 	} = ctx.params;
+	categoryId = parseInt(categoryId);
 	Validator.validateInteger(categoryId, CategoryError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -52,6 +53,7 @@ router.get('/inProduct/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -73,6 +75,7 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 	let {
 		departmentId
 	} = ctx.params;
+	departmentId = parseInt(departmentId);
 	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {

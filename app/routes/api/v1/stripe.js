@@ -10,6 +10,7 @@ router.post('/charge', async (ctx) => {
 		amount,
 		currency // optional
 	} = ctx.request.body;
+	order_id = parseInt(order_id);
 	Validator.requireArgs({
 		stripeToken,
 		order_id,

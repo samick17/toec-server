@@ -28,7 +28,10 @@ function init(seq, APIs) {
 				}
 			}
 			let categories = await Category.findAll(queryOptions);
-			return categories.map(category => category.dataValues);
+			return {
+				count: categories.length,
+				rows: categories.map(category => category.dataValues)
+			};
 		},
 		// * categoryId
 		getCategoryById: async function(categoryId) {

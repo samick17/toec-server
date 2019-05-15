@@ -11,6 +11,9 @@ router.post('/', async (ctx) => {
 		shipping_id,
 		tax_id
 	} = ctx.request.body;
+	cart_id = parseInt(cart_id);
+	shipping_id = parseInt(shipping_id);
+	tax_id = parseInt(tax_id);
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
@@ -24,6 +27,7 @@ router.get('/:orderId', async (ctx) => {
 	let {
 		orderId
 	} = ctx.params;
+	orderId = parseInt(orderId);
 	Validator.validateInteger(orderId, OrdersError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -57,6 +61,7 @@ router.get('/shortDetail/:orderId', async (ctx) => {
 	let {
 		orderId
 	} = ctx.params;
+	orderId = parseInt(orderId);
 	Validator.validateInteger(orderId, OrdersError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {

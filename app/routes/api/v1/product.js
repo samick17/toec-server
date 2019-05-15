@@ -67,6 +67,7 @@ router.get('/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -93,6 +94,7 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		limit = 20,
 		description_length = 200
 	} = ctx.query;
+	categoryId = parseInt(categoryId);
 	Validator.validateInteger(categoryId, CategoryError, 'IDNotNumber');
 	page = parseInt(page);
 	limit = parseInt(limit);
@@ -129,6 +131,7 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		limit = 20,
 		description_length = 200
 	} = ctx.query;
+	departmentId = parseInt(departmentId);
 	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
 	page = parseInt(page);
 	limit = parseInt(limit);
@@ -161,6 +164,7 @@ router.get('/:productId/details', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -182,6 +186,7 @@ router.get('/:productId/locations', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -204,6 +209,7 @@ router.get('/:productId/reviews', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -230,6 +236,7 @@ router.post('/:productId/reviews', async (ctx) => {
 		review,
 		rating
 	} = ctx.request.body;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	Validator.requireArgs({
 		review, rating
