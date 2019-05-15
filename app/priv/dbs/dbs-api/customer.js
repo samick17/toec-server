@@ -57,7 +57,9 @@ function init(seq, APIs) {
 		},
 		countOfEmail: async function(email) {
 			return await Customer.count({
-				email: email
+				where: {
+					email: email
+				}
 			});
 		},
 		// * name
