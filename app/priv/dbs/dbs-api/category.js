@@ -29,7 +29,7 @@ function init(seq, APIs) {
 			}
 			let categories = await Category.findAll(queryOptions);
 			return {
-				count: categories.length,
+				count: await Category.count(),
 				rows: categories.map(category => category.dataValues)
 			};
 		},

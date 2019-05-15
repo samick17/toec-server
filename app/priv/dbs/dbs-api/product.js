@@ -48,7 +48,7 @@ function init(seq, APIs) {
 				}
 			});
 			return {
-				count: jsonObjects.length,
+				count: await Product.count(),
 				rows: jsonObjects
 			};
 		},
@@ -81,7 +81,7 @@ function init(seq, APIs) {
 				}
 			});
 			return {
-				count: jsonObjects.length,
+				count: await Product.count(),
 				rows: jsonObjects
 			};
 		},
@@ -163,7 +163,7 @@ function init(seq, APIs) {
 						result.rows.push(jsonObject);
 					}
 				});
-				result.count = result.rows.length;
+				result.count = await Product.count();
 			}
 			return result;
 		},
@@ -207,7 +207,7 @@ function init(seq, APIs) {
 						result.rows.push(jsonObject);
 					}
 				});
-				result.count = result.rows.length;
+				result.count = await Product.count();
 			}
 			return result;
 		},
