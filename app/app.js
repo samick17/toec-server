@@ -5,10 +5,10 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const session = require('koa-session2');
+const Env = require('@Env');
 const redisStore = require('@Priv/redis-store');
 const api = require('@Route/api');
 const redisClient = require('@Priv/redis-client').client;
-const Env = require('@Env');
 
 function createApp() {
 	const app = new Koa();

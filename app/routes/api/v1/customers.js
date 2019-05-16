@@ -48,7 +48,6 @@ router.post('/facebook', async (ctx) => {
 });
 
 router.get('/logout', async (ctx) => {
-	await RouteUtils.auth(ctx);
 	ctx.session = null;
 	ctx.body = {};
 });

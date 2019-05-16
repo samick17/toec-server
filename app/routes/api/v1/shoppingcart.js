@@ -6,11 +6,18 @@ const RouteHandler = require('@Priv/route-handler');
 const Validator = require('@Priv/validator');
 
 router.get('/generateUniqueId', async (ctx) => {
-	let APIs = DB.getAPIs();
-	let newId = await APIs.ShoppingCartAPI.generateUniqueId();
-	ctx.body = {
-		cart_id: newId
-	};
+	if(typeof ctx.session.cartId !== 'undefined') {
+		ctx.body = {
+			cart_id: ctx.session.cartId
+		};
+	} else {
+		let APIs = DB.getAPIs();
+		let newId = await APIs.ShoppingCartAPI.generateUniqueId();
+		ctx.session.cartId = newId;
+		ctx.body = {
+			cart_id: newId
+		};
+	}
 });
 
 router.post('/add', async (ctx) => {
@@ -19,7 +26,6 @@ router.post('/add', async (ctx) => {
 		product_id,
 		attributes
 	} = ctx.request.body;
-	cart_id = parseInt(cart_id);
 	product_id = parseInt(product_id);
 	Validator.requireArgs({
 		cart_id, product_id, attributes

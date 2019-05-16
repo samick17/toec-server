@@ -4,6 +4,14 @@ const ErrorHandler = require('@Priv/error-handler');
 const UserError = require('@Priv/error/user');
 const RouteUtils = require('@Priv/route-utils');
 
+router.get('/session', async (ctx) => {
+	let session = ctx.session || {};
+	ctx.body = {
+		cartId: session.cartId,
+		uid: session.uid
+	};
+});
+
 router.put('/', async (ctx) => {
 	let customerId = await RouteUtils.auth(ctx);
 	let {
