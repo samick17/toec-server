@@ -206,7 +206,6 @@ router.get('/:productId/locations', async (ctx) => {
 });
 
 router.get('/:productId/reviews', async (ctx) => {
-	await RouteUtils.auth(ctx);
 	let {
 		productId
 	} = ctx.params;

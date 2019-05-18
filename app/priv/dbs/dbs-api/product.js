@@ -233,13 +233,31 @@ function init(seq, APIs) {
 		// * review: string # review text of product
 		// * rating: integer
 		createProductReview: async function(customerId, productId, review, rating) {
-			return await Review.create({
-				customer_id: customerId,
-				product_id: productId,
-				review: review,
-				rating: rating,
-				created_on: Date.now()
+			let t = await seq.transaction();
+			let reviewInstance = await Review.findOne({
+				where: {
+					customer_id: customerId,
+					product_id: productId
+				}
+			}, {
+				transaction: t
 			});
+			if(reviewInstance) {
+				reviewInstance.update({
+					review,
+					rating
+				});
+			} else {
+				await Review.create({
+					customer_id: customerId,
+					product_id: productId,
+					review: review,
+					rating: rating
+				}, {
+					transaction: t
+				});
+			}
+			await t.commit();
 		}
 	};
 	APIs.ProductAPI = api;
@@ -259,8 +277,8 @@ if(module.id === '.') {
 		// 	descriptionLength: 100
 		// });
 		// console.log(products);
-		let products = await API.searchProducts('beautiful');
-		console.log(products.rows.length, products.count);
+		// let products = await API.searchProducts('beautiful');
+		// console.log(products.rows.length, products.count);
 		// let product = await API.getProductById(1);
 		// console.log(product);
 		//
@@ -272,9 +290,9 @@ if(module.id === '.') {
 		// console.log(products);
 		// let products = await API.getProductsByDepartmentId(1);
 		// console.log(products);
-		// let reviews = await API.getProductReviewById(1);
-		// console.log(reviews);
-		// let ret = await API.createProductReview(1, 1, 'Testzxczxc - asdsa ', 5);
+		let reviews = await API.getProductReviewById(1);
+		console.log(reviews);
+		// let ret = await API.createProductReview(1, 1, 'TestReview - B', 3);
 		// console.log(ret);
 
 	})();

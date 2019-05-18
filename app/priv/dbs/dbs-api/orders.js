@@ -40,8 +40,7 @@ function init(seq, APIs) {
 				customer_id: customerId,
 				cart_id: cartId,
 				shipping_id: shippingId,
-				tax_id: taxId,
-				created_on: Date.now()
+				tax_id: taxId
 			}, {
 				transaction: t
 			});
