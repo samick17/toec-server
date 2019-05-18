@@ -3,6 +3,7 @@ const router = require('koa-router')();
 const OrdersError = require('@Priv/error/orders');
 const RouteHandler = require('@Priv/route-handler');
 const Validator = require('@Priv/validator');
+const RouteUtils = require('@Priv/route-utils');
 
 router.post('/', async (ctx) => {
 	let customerId = await RouteUtils.auth(ctx);
@@ -11,7 +12,6 @@ router.post('/', async (ctx) => {
 		shipping_id,
 		tax_id
 	} = ctx.request.body;
-	cart_id = parseInt(cart_id);
 	shipping_id = parseInt(shipping_id);
 	tax_id = parseInt(tax_id);
 	await RouteHandler.handleModel(ctx, {

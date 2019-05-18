@@ -40,11 +40,9 @@ if(process.env.NODE_ENV === 'production') {
 
 router.use(ExportedAPIPath, async (ctx, next) => {
 	let origin = ctx.headers.origin;
-	if(AllowedOrigins.indexOf(origin) >= 0) {
+	if(AllowedOrigins.indexOf(origin) >= 0 || typeof origin === 'undefined') {
 		ctx.set('Access-Control-Allow-Credentials', true);
 		ctx.set('Access-Control-Allow-Origin', origin);
-		await next();
-	} else if(typeof origin === 'undefined') {
 		await next();
 	} else {
 		throw new Error('Invalid request');
@@ -53,14 +51,11 @@ router.use(ExportedAPIPath, async (ctx, next) => {
 
 router.options('*', async (ctx, next) => {
 	let origin = ctx.headers.origin;
-	if(AllowedOrigins.indexOf(origin) >= 0) {
+	if(AllowedOrigins.indexOf(origin) >= 0 || typeof origin === 'undefined') {
 		ctx.set('Access-Control-Allow-Credentials', true);
 		ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 		ctx.set('Access-Control-Allow-Origin', origin);
 		ctx.set('Access-Control-Allow-Headers', ctx.get('Access-Control-Request-Headers'));
-		ctx.status = 204;
-		await next();
-	} else if(typeof origin === 'undefined') {
 		ctx.status = 204;
 		await next();
 	} else {

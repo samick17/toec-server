@@ -37,9 +37,7 @@ async function responseUserData(ctx, userJsonData) {
 		ctx.session.name = name;
 		ctx.session.email = email;
 		let jsonData = {
-			customer: {
-				schema: userJsonData
-			},
+			customer: userJsonData,
 			accessToken: accessToken,
 			expires_in: ExpiresIn
 		};

@@ -142,8 +142,8 @@ if(module.id === '.') {
 		// console.log(orders);
 		// let orders2 = await API.getOrderDetails(1);
 		// console.log(orders2);
-		// let orders1 = await API.getOrdersShortDetail(1);
-		// console.log(orders1);
+		let orders1 = await API.getOrdersShortDetail(1);
+		console.log(orders1);
 		// let orders = await API.getOrdersByCustomerId(1);
 		// console.log(orders);
 		// let orders1 = await API.dropOrders(6);

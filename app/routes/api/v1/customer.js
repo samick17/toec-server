@@ -3,6 +3,7 @@ const router = require('koa-router')();
 const ErrorHandler = require('@Priv/error-handler');
 const UserError = require('@Priv/error/user');
 const RouteUtils = require('@Priv/route-utils');
+const Validator = require('@Priv/validator');
 
 router.get('/session', async (ctx) => {
 	let session = ctx.session || {};

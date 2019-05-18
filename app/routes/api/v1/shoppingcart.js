@@ -39,7 +39,6 @@ router.get('/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	cartId = parseInt(cartId);
 	Validator.requireArgs({
 		cartId
 	}, ShoppingCartError, 'FieldsRequired');
@@ -67,7 +66,6 @@ router.delete('/empty/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	cartId = parseInt(cartId);
 	Validator.requireArgs({
 		cartId
 	}, ShoppingCartError, 'FieldsRequired');
@@ -93,7 +91,6 @@ router.get('/totalAmount/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	cartId = parseInt(cartId);
 	Validator.requireArgs({
 		cartId
 	}, ShoppingCartError, 'FieldsRequired');
@@ -118,7 +115,6 @@ router.get('/getSaved/:cartId', async (ctx) => {
 	let {
 		cartId
 	} = ctx.params;
-	cartId = parseInt(cartId);
 	Validator.requireArgs({
 		cartId
 	}, ShoppingCartError, 'FieldsRequired');

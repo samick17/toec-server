@@ -21,7 +21,7 @@ function createApp() {
 		httpOnly: true,
 		signed: true,
 		rolling: false,
-		renew: true,
+		renew: false,
 		store: redisStore({
 			client: redisClient
 		})

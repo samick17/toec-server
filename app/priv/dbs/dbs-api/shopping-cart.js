@@ -105,7 +105,8 @@ function init(seq, APIs) {
 				}
 			});
 			return await this.getCartById(cart.dataValues.cart_id, {
-				withProductId: true
+				withProductId: true,
+				withImage: true
 			});
 		},
 		// * cartId
@@ -129,13 +130,13 @@ function init(seq, APIs) {
 		},
 		// * cartId
 		getAmountOfCart: async function(cartId) {
-			let count = await ShoppingCart.count({
-				where: {
-					cart_id: cartId
-				}
+			let items = await api.getCartById(cartId);
+			let totalAmount = 0;
+			items.forEach(item => {
+				totalAmount += item.subtotal;
 			});
 			return {
-				total_amount: count
+				total_amount: totalAmount
 			};
 		},
 		// * itemId

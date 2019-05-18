@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const UserError = require('./error/user');
 const PrivateKey = fs.readFileSync(path.join(__dirname, '../env/private.key'));
+const EnvParams = require('@Env');
 
 async function generateToken(tokenInfo, tokenOpts) {
 	return new Promise((resolve, reject) => {
@@ -44,17 +45,19 @@ function validateToken(token, name, email) {
 			reason: UserError.TokenExpired
 		};
 	}
-	if(tokenInfo.name !== name) {
-		return {
-			isValid: false,
-			reason: UserError.InvalidName
-		};
-	}
-	if(tokenInfo.email !== email) {
-		return {
-			isValid: false,
-			reason: UserError.InvalidEmailFormat
-		};
+	if(!EnvParams.SkipValidateSession) {
+		if(tokenInfo.name !== name) {
+			return {
+				isValid: false,
+				reason: UserError.InvalidName
+			};
+		}
+		if(tokenInfo.email !== email) {
+			return {
+				isValid: false,
+				reason: UserError.InvalidEmailFormat
+			};
+		}
 	}
 	return {
 		isValid: true,
