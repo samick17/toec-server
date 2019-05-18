@@ -244,20 +244,9 @@ router.post('/:productId/reviews', async (ctx) => {
 	rating = parseInt(rating);
 	Validator.validateStrLenRange(review, 1, 2048, ProductError, 'ReviewNotString', 'ReviewOutOfRange');
 	Validator.validateIntegerRange(rating, 1, 10, ProductError, 'RatingNotNumber', 'RatingOutOfRange');
-	await RouteHandler.handleModel(ctx, {
-		onData: async () => {
-			let APIs = DB.getAPIs();
-			return await APIs.ProductAPI.createProductReview(customerId, productId, review, rating);
-		},
-		onError: () => {
-			return {
-				code: ProductError.IDNotFound,
-				args: {
-					id: productId
-				}
-			};
-		}
-	});
+	let APIs = DB.getAPIs();
+	await APIs.ProductAPI.createProductReview(customerId, productId, review, rating);
+	ctx.body = {};
 });
 
 module.exports = router;
