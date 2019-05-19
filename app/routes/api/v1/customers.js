@@ -44,6 +44,12 @@ router.post('/login', async (ctx) => {
 });
 
 router.post('/facebook', async (ctx) => {
+	let {
+		access_token
+	} = ctx.request.body;
+
+	// TODO validate and login if valid
+
 	ctx.body = {};
 });
 

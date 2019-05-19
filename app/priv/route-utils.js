@@ -4,21 +4,19 @@ const ErrorHandler = require('./error-handler');
 const UserError = require('./error/user');
 
 async function auth(ctx) {
-	return ctx.session || await (async () => {
-		let accessToken = ctx.headers['user-key'];
-		let validationData = Auth.validateToken(accessToken, ctx.session.name, ctx.session.email);
-		if(validationData.isValid) {
-			let tokenInfo = validationData.info;
-			ctx.session.uid = tokenInfo.uid;
-			return tokenInfo;
-		} else {
-			ErrorHandler.handle(validationData.reason, {
-				name: ctx.session.name,
-				email: ctx.session.email,
-				token: accessToken
-			});
-		}
-	})();
+	let accessToken = ctx.headers['user-key'];
+	let validationData = Auth.validateToken(accessToken, ctx.session.name, ctx.session.email);
+	if(validationData.isValid) {
+		let tokenInfo = validationData.info;
+		ctx.session.uid = tokenInfo.uid;
+		return tokenInfo;
+	} else {
+		ErrorHandler.handle(validationData.reason, {
+			name: ctx.session.name,
+			email: ctx.session.email,
+			token: accessToken
+		});
+	}
 }
 
 async function responseUserData(ctx, userJsonData) {

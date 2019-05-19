@@ -38,8 +38,14 @@ router.post('/charge', async (ctx) => {
 			receipt_email: email
 		};
 		ctx.body = await StripeAPIs.createCharge(chargeData);
-		let APIs = DB.getAPIs();
-		 await APIs.ShoppingCartAPI.emptyCart(cartId);
+		try {
+			if(typeof cartId !== 'undefined') {
+				let APIs = DB.getAPIs();
+			 	await APIs.ShoppingCartAPI.emptyCart(cartId);
+			}
+		} catch(err) {
+			
+		}
 	} catch(err) {
 		throw err;
 	}
