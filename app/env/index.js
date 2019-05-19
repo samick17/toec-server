@@ -7,18 +7,23 @@ function loadEnv() {
 	switch((process.env.NODE_ENV || '').trim()) {
 		case 'production':
 		envFile = '.env';
+		EnvParams.mode = 'prod';
 		break;
 		case 'stage':
 		envFile = 'stage.env';
+		EnvParams.mode = 'stage';
 		break;
 		case 'dev':
 		envFile = 'dev.env';
+		EnvParams.mode = 'dev';
 		break;
 		case 'test':
 		envFile = 'test.env';
+		EnvParams.mode = 'test';
 		break;
 		default:
 		envFile = 'dev.env';
+		EnvParams.mode = 'dev';
 		break;
 	}
 	let envText = fs.readFileSync(path.join(__dirname, envFile)).toString();

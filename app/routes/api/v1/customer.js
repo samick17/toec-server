@@ -4,17 +4,20 @@ const ErrorHandler = require('@Priv/error-handler');
 const UserError = require('@Priv/error/user');
 const RouteUtils = require('@Priv/route-utils');
 const Validator = require('@Priv/validator');
+const PublishableKey = require('@Priv/stripe').PublishableKey;
 
 router.get('/session', async (ctx) => {
 	let session = ctx.session || {};
 	ctx.body = {
 		cartId: session.cartId,
-		uid: session.uid
+		uid: session.uid,
+		publishableKey: PublishableKey
 	};
 });
 
 router.put('/', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		name,
 		email,
@@ -47,7 +50,8 @@ router.put('/', async (ctx) => {
 
 // redis -> headers token -> error
 router.get('/', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	if(customerId) {
 		let APIs = DB.getAPIs();
 		let jsonData = await APIs.CustomerAPI.getCustomerById(customerId);

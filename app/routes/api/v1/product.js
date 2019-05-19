@@ -228,7 +228,8 @@ router.get('/:productId/reviews', async (ctx) => {
 });
 
 router.post('/:productId/reviews', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		productId
 	} = ctx.params;

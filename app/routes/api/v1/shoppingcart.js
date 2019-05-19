@@ -43,7 +43,10 @@ router.get('/:cartId', async (ctx) => {
 		cartId
 	}, ShoppingCartError, 'FieldsRequired');
 	let APIs = DB.getAPIs();
-	let jsonData = await APIs.ShoppingCartAPI.getCartById(cartId);
+	let jsonData = await APIs.ShoppingCartAPI.getCartById(cartId, {
+		withProductId: true,
+		withImage: true
+	});
 	ctx.body = jsonData;
 });
 

@@ -31,6 +31,8 @@ if(process.env.NODE_ENV === 'production') {
 	];
 } else {
 	AllowedOrigins = [
+	'https://toectest.tectronix.net',
+	'https://toecapitest.tectronix.net',
 	'http://127.0.0.1:53301',
 	'http://localhost:53301',
 	'https://127.0.0.1:53301',

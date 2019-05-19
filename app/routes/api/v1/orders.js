@@ -6,7 +6,8 @@ const Validator = require('@Priv/validator');
 const RouteUtils = require('@Priv/route-utils');
 
 router.post('/', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		cart_id,
 		shipping_id,
@@ -47,7 +48,8 @@ router.get('/:orderId', async (ctx) => {
 
 // Auth required
 router.get('/inCustomer', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

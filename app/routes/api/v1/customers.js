@@ -53,7 +53,8 @@ router.get('/logout', async (ctx) => {
 });
 
 router.put('/address', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		address_1,
 		address_2, // optional
@@ -73,7 +74,8 @@ router.put('/address', async (ctx) => {
 });
 
 router.put('/creditCard', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		credit_card
 	} = ctx.request.body;
