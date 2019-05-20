@@ -66,5 +66,9 @@ module.exports = {
 	ShippingRegionIDNotNumber: {
 		code: 'USR_17',
 		message: 'ShippingRegionID should be a number'
+	},
+	InvalidFacebookToken: {
+		code: 'USR_18',
+		message: 'Cannot login in with specified accessToken.'
 	}
 };

@@ -1,23 +1,22 @@
+const DB = require('@DB');
 const Auth = require('./auth');
 const ErrorHandler = require('./error-handler');
 const UserError = require('./error/user');
 
 async function auth(ctx) {
-	return ctx.session.uid || await (async () => {
-		let accessToken = ctx.headers['user-key'];
-		let validationData = Auth.validateToken(accessToken, ctx.session.name, ctx.session.email);
-		if(validationData.isValid) {
-			let tokenInfo = validationData.info;
-			ctx.session.uid = tokenInfo.uid;
-			return tokenInfo.uid;
-		} else {
-			ErrorHandler.handle(validationData.reason, {
-				name: ctx.session.name,
-				email: ctx.session.email,
-				token: accessToken
-			});
-		}
-	})();
+	let accessToken = ctx.headers['user-key'];
+	let validationData = Auth.validateToken(accessToken, ctx.session.name, ctx.session.email);
+	if(validationData.isValid) {
+		let tokenInfo = validationData.info;
+		ctx.session.uid = tokenInfo.uid;
+		return tokenInfo;
+	} else {
+		ErrorHandler.handle(validationData.reason, {
+			name: ctx.session.name,
+			email: ctx.session.email,
+			token: accessToken
+		});
+	}
 }
 
 async function responseUserData(ctx, userJsonData) {
@@ -26,20 +25,22 @@ async function responseUserData(ctx, userJsonData) {
 		let uid = userJsonData.customer_id;
 		let name = userJsonData.name;
 		let email = userJsonData.email;
+		let APIs = DB.getAPIs();
+		let cartId = await APIs.ShoppingCartAPI.generateUniqueId();
 		let accessToken = await Auth.generateToken({
 			uid: uid,
 			name: name,
-			email: email
+			email: email,
+			cartId: cartId
 		}, {
 			expiresIn: ExpiresIn
 		});
 		ctx.session.uid = uid;
 		ctx.session.name = name;
 		ctx.session.email = email;
+		ctx.session.cartId = cartId;
 		let jsonData = {
-			customer: {
-				schema: userJsonData
-			},
+			customer: userJsonData,
 			accessToken: accessToken,
 			expires_in: ExpiresIn
 		};

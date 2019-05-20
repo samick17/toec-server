@@ -20,7 +20,6 @@ class RedisStore extends Store {
 	}
 
 	async destroy(sid, ctx) {
-		console.log('delete');
 		return await this.client.delAsync(`SESSION:${sid}`);
 	}
 }

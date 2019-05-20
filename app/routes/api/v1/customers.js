@@ -5,6 +5,8 @@ const ErrorHandler = require('@Priv/error-handler');
 const Auth = require('@Priv/auth');
 const RouteUtils = require('@Priv/route-utils');
 const Validator = require('@Priv/validator');
+const OAuthFb = require('@Priv/oauth/facebook');
+const uuid = require('uuid');
 
 router.post('/', async (ctx) => {
 	let {
@@ -44,17 +46,33 @@ router.post('/login', async (ctx) => {
 });
 
 router.post('/facebook', async (ctx) => {
-	ctx.body = {};
+	let {
+		access_token
+	} = ctx.request.body;
+	Validator.requireArgs({
+		access_token
+	}, UserError, 'FieldsRequired');
+	let data = await OAuthFb.getProfile(access_token);
+	let APIs = DB.getAPIs();
+	let customerJsonData = await APIs.CustomerAPI.getCustomerByEmail(data.email);
+	if(!customerJsonData) {
+		customerJsonData = await APIs.CustomerAPI.register(data.name, data.email, uuid.v4().substring(0, 50));
+	}
+	if(customerJsonData) {
+		await RouteUtils.responseUserData(ctx, customerJsonData);
+	} else {
+		ErrorHandler.handle(UserError.InvalidFacebookToken);
+	}
 });
 
 router.get('/logout', async (ctx) => {
-	await RouteUtils.auth(ctx);
 	ctx.session = null;
 	ctx.body = {};
 });
 
 router.put('/address', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		address_1,
 		address_2, // optional
@@ -74,7 +92,8 @@ router.put('/address', async (ctx) => {
 });
 
 router.put('/creditCard', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		credit_card
 	} = ctx.request.body;

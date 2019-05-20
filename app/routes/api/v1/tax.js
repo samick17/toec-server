@@ -17,6 +17,7 @@ router.get('/:taxId', async (ctx) => {
 	let {
 		taxId
 	} = ctx.params;
+	taxId = parseInt(taxId);
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();

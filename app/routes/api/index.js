@@ -26,10 +26,13 @@ let AllowedOrigins;
 
 if(process.env.NODE_ENV === 'production') {
 	AllowedOrigins = [
-	'https://toec.tectronix.net'
+	'https://toec.tectronix.net',
+	'https://toecapi.tectronix.net'
 	];
 } else {
 	AllowedOrigins = [
+	'https://toectest.tectronix.net',
+	'https://toecapitest.tectronix.net',
 	'http://127.0.0.1:53301',
 	'http://localhost:53301',
 	'https://127.0.0.1:53301',
@@ -39,7 +42,7 @@ if(process.env.NODE_ENV === 'production') {
 
 router.use(ExportedAPIPath, async (ctx, next) => {
 	let origin = ctx.headers.origin;
-	if(AllowedOrigins.indexOf(origin) >= 0) {
+	if(AllowedOrigins.indexOf(origin) >= 0 || typeof origin === 'undefined') {
 		ctx.set('Access-Control-Allow-Credentials', true);
 		ctx.set('Access-Control-Allow-Origin', origin);
 		await next();
@@ -50,7 +53,7 @@ router.use(ExportedAPIPath, async (ctx, next) => {
 
 router.options('*', async (ctx, next) => {
 	let origin = ctx.headers.origin;
-	if(AllowedOrigins.indexOf(origin) >= 0) {
+	if(AllowedOrigins.indexOf(origin) >= 0 || typeof origin === 'undefined') {
 		ctx.set('Access-Control-Allow-Credentials', true);
 		ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 		ctx.set('Access-Control-Allow-Origin', origin);

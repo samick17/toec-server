@@ -2,7 +2,6 @@ const redis = require('redis');
 const {promisify} = require('util');
 
 const processEnv = process.env;
-
 const RedisUrl = (processEnv.REDIS_NAME && processEnv.REDIS_PORT) ? `redis://${processEnv.REDIS_NAME}:${processEnv.REDIS_PORT}` : undefined;
 const logs = [];
 

@@ -7,6 +7,7 @@ const DepartmentError = require('@Priv/error/department');
 const ErrorHandler = require('@Priv/error-handler');
 const RouteHandler = require('@Priv/route-handler');
 const Validator = require('@Priv/validator');
+const RouteUtils = require('@Priv/route-utils');
 
 // TODO validate query params.
 router.get('/', async (ctx) => {
@@ -67,6 +68,7 @@ router.get('/:productId', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -93,6 +95,7 @@ router.get('/inCategory/:categoryId', async (ctx) => {
 		limit = 20,
 		description_length = 200
 	} = ctx.query;
+	categoryId = parseInt(categoryId);
 	Validator.validateInteger(categoryId, CategoryError, 'IDNotNumber');
 	page = parseInt(page);
 	limit = parseInt(limit);
@@ -129,6 +132,7 @@ router.get('/inDepartment/:departmentId', async (ctx) => {
 		limit = 20,
 		description_length = 200
 	} = ctx.query;
+	departmentId = parseInt(departmentId);
 	Validator.validateInteger(departmentId, DepartmentError, 'IDNotNumber');
 	page = parseInt(page);
 	limit = parseInt(limit);
@@ -161,6 +165,7 @@ router.get('/:productId/details', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -182,6 +187,7 @@ router.get('/:productId/locations', async (ctx) => {
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -200,10 +206,10 @@ router.get('/:productId/locations', async (ctx) => {
 });
 
 router.get('/:productId/reviews', async (ctx) => {
-	await RouteUtils.auth(ctx);
 	let {
 		productId
 	} = ctx.params;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -222,7 +228,8 @@ router.get('/:productId/reviews', async (ctx) => {
 });
 
 router.post('/:productId/reviews', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		productId
 	} = ctx.params;
@@ -230,6 +237,7 @@ router.post('/:productId/reviews', async (ctx) => {
 		review,
 		rating
 	} = ctx.request.body;
+	productId = parseInt(productId);
 	Validator.validateInteger(productId, ProductError, 'IDNotNumber');
 	Validator.requireArgs({
 		review, rating
@@ -237,20 +245,9 @@ router.post('/:productId/reviews', async (ctx) => {
 	rating = parseInt(rating);
 	Validator.validateStrLenRange(review, 1, 2048, ProductError, 'ReviewNotString', 'ReviewOutOfRange');
 	Validator.validateIntegerRange(rating, 1, 10, ProductError, 'RatingNotNumber', 'RatingOutOfRange');
-	await RouteHandler.handleModel(ctx, {
-		onData: async () => {
-			let APIs = DB.getAPIs();
-			return await APIs.ProductAPI.createProductReview(customerId, productId, review, rating);
-		},
-		onError: () => {
-			return {
-				code: ProductError.IDNotFound,
-				args: {
-					id: productId
-				}
-			};
-		}
-	});
+	let APIs = DB.getAPIs();
+	await APIs.ProductAPI.createProductReview(customerId, productId, review, rating);
+	ctx.body = {};
 });
 
 module.exports = router;

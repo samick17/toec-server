@@ -29,7 +29,8 @@ function init() {
 			},
 			created_on: {
 				type: Sequelize.DATE,
-				allowNull: false
+				allowNull: false,
+				defaultValue: Sequelize.NOW
 			}
 		},
 		options: {

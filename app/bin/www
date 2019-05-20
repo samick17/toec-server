@@ -6,9 +6,9 @@
 //
 require('module-alias/register');
 const http = require('http');
+const Env = require('@Env');
 const App = require('@App');
 const logger = require('@Utility/logger').getLogger('server');
-const Env = require('@Env');
 const crypto = require('crypto');
 const DB = require('@DB');
 

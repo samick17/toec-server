@@ -55,9 +55,23 @@ function init(seq, APIs) {
 				return customerToJson(customer);
 			}
 		},
+		// # Auth required.
+		// * customerId
+		getCustomerByEmail: async function(email) {
+			let customer = await Customer.findOne({
+				where: {
+					email: email
+				}
+			});
+			if(customer) {
+				return customerToJson(customer);
+			}
+		},
 		countOfEmail: async function(email) {
 			return await Customer.count({
-				email: email
+				where: {
+					email: email
+				}
 			});
 		},
 		// * name
@@ -163,8 +177,10 @@ if(module.id === '.') {
 		// console.log(customer);
 		// let customer = await API.getCustomerById(1);
 		// console.log(customer);
-		let customer = await API.auth('ggg1@google.com', 'abcd1234');
+		let customer = await API.getCustomerByEmail('ggg1@google.com');
 		console.log(customer);
+		// let customer = await API.auth('ggg1@google.com', 'abcd1234');
+		// console.log(customer);
 		// let customer = await API.register('samick', 'ggg1@google.com', 'abcd1234');
 		// console.log(customer);
 		// let customer = await API.updateAddress(15, 'dfgfg');

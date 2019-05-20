@@ -40,8 +40,7 @@ function init(seq, APIs) {
 				customer_id: customerId,
 				cart_id: cartId,
 				shipping_id: shippingId,
-				tax_id: taxId,
-				created_on: Date.now()
+				tax_id: taxId
 			}, {
 				transaction: t
 			});
@@ -142,8 +141,8 @@ if(module.id === '.') {
 		// console.log(orders);
 		// let orders2 = await API.getOrderDetails(1);
 		// console.log(orders2);
-		// let orders1 = await API.getOrdersShortDetail(1);
-		// console.log(orders1);
+		let orders1 = await API.getOrdersShortDetail(1);
+		console.log(orders1);
 		// let orders = await API.getOrdersByCustomerId(1);
 		// console.log(orders);
 		// let orders1 = await API.dropOrders(6);

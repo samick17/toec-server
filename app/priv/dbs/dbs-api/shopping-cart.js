@@ -43,7 +43,9 @@ function init(seq, APIs) {
 		generateUniqueId: async function() {
 			let newId = uuid.v4().replace(/-/g, '');
 			let count = await ShoppingCart.count({
-				cart_id: newId
+				where: {
+					cart_id: newId
+				}
 			});
 			return count === 0 ? newId : await this.generateUniqueId();
 		},
@@ -103,7 +105,8 @@ function init(seq, APIs) {
 				}
 			});
 			return await this.getCartById(cart.dataValues.cart_id, {
-				withProductId: true
+				withProductId: true,
+				withImage: true
 			});
 		},
 		// * cartId
@@ -127,11 +130,13 @@ function init(seq, APIs) {
 		},
 		// * cartId
 		getAmountOfCart: async function(cartId) {
-			let count = await ShoppingCart.count({
-				cart_id: cartId
+			let items = await api.getCartById(cartId);
+			let totalAmount = 0;
+			items.forEach(item => {
+				totalAmount += item.subtotal;
 			});
 			return {
-				total_amount: count
+				total_amount: totalAmount
 			};
 		},
 		// * itemId
@@ -156,12 +161,13 @@ if(module.id === '.') {
 	(async () => {
 		const seq = await DBWrapper.init();
 		let API = init(seq, {});
-		// let cartId = await API.generateUniqueId();
-		let cartId = '35ddfe3fca224ecaab3008760d462626';
+		let cartId = await API.generateUniqueId();
+		console.log(cartId);
+		// let cartId = '35ddfe3fca224ecaab3008760d462626';
 		// let item = await API.addProductToCart(cartId, 5, '');
 		// console.log(item);
-		let item = await API.getCartById(cartId, 1, '');
-		console.log(item);
+		// let item = await API.getCartById(cartId, 1, '');
+		// console.log(item);
 		// let item = await API.updateCartById(1, 2);
 		// console.log(item);
 		// let item = await API.emptyCart(cartId);

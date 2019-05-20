@@ -48,7 +48,7 @@ function init(seq, APIs) {
 				}
 			});
 			return {
-				count: jsonObjects.length,
+				count: await Product.count(),
 				rows: jsonObjects
 			};
 		},
@@ -58,22 +58,28 @@ function init(seq, APIs) {
 		// limit: integer, default: 20
 		// descriptionLength: integer, default 200
 		searchProducts: async function(queryString, {allWords, page, limit, descriptionLength}={allWords: 'on', page: 1, limit: 20, descriptionLength: 200}) {
-			let products = await Product.findAll({
+			let queryOptions = {};
+			let actualLimit = queryOptions.limit = limit >= 1 ? limit : 20;
+			queryOptions.offset = page >= 1 ? (page-1) * actualLimit : 0;
+			let originQuery = {
 				where: {
 					[Sequelize.Op.or]: [
 					{
 						name: {
-							[Sequelize.Op.like]: `% ${queryString} %`
+							[Sequelize.Op.like]: `%${queryString}%`
 						}
 					},
 					{
 						description: {
-							[Sequelize.Op.like]: `% ${queryString} %`
+							[Sequelize.Op.like]: `%${queryString}%`
 						}
 					}
 					]
 				}
-			});
+			};
+			Object.assign(queryOptions, originQuery);
+			console.log(queryOptions);
+			let products = await Product.findAll(queryOptions);
 			let jsonObjects = [];
 			products.forEach(product => {
 				if(product.dataValues.description.length <= descriptionLength) {
@@ -81,7 +87,7 @@ function init(seq, APIs) {
 				}
 			});
 			return {
-				count: jsonObjects.length,
+				count: await Product.count(originQuery),
 				rows: jsonObjects
 			};
 		},
@@ -135,14 +141,15 @@ function init(seq, APIs) {
 			let queryOptions = {};
 			let actualLimit = queryOptions.limit = limit >= 1 ? limit : 20;
 			queryOptions.offset = page >= 1 ? (page-1) * actualLimit : 0;
-			Object.assign(queryOptions, {
+			let originQuery = {
 				include: [{
 					model: Category,
 					where: {
 						category_id: categoryId
 					}
 				}]
-			});
+			};
+			Object.assign(queryOptions, originQuery);
 			let products = await Product.findAll(queryOptions);
 			let result = {
 				count: 0,
@@ -163,7 +170,7 @@ function init(seq, APIs) {
 						result.rows.push(jsonObject);
 					}
 				});
-				result.count = result.rows.length;
+				result.count = await Product.count(originQuery);
 			}
 			return result;
 		},
@@ -175,17 +182,15 @@ function init(seq, APIs) {
 			let queryOptions = {};
 			let actualLimit = queryOptions.limit = limit >= 1 ? limit : 20;
 			queryOptions.offset = page >= 1 ? (page-1) * actualLimit : 0;
-			Object.assign(queryOptions, {
+			let originQuery = {
 				include: [{
 					model: Category,
-					include: [{
-						model: Department,
-						where: {
-							department_id: departmentId
-						}
-					}]
+					where: {
+						department_id: departmentId
+					}
 				}]
-			});
+			};
+			Object.assign(queryOptions, originQuery);
 			let products = await Product.findAll(queryOptions);
 			let result = {
 				count: 0,
@@ -207,7 +212,7 @@ function init(seq, APIs) {
 						result.rows.push(jsonObject);
 					}
 				});
-				result.count = result.rows.length;
+				result.count = await Product.count(originQuery);
 			}
 			return result;
 		},
@@ -228,13 +233,31 @@ function init(seq, APIs) {
 		// * review: string # review text of product
 		// * rating: integer
 		createProductReview: async function(customerId, productId, review, rating) {
-			return await Review.create({
-				customer_id: customerId,
-				product_id: productId,
-				review: review,
-				rating: rating,
-				created_on: Date.now()
+			let t = await seq.transaction();
+			let reviewInstance = await Review.findOne({
+				where: {
+					customer_id: customerId,
+					product_id: productId
+				}
+			}, {
+				transaction: t
 			});
+			if(reviewInstance) {
+				reviewInstance.update({
+					review,
+					rating
+				});
+			} else {
+				await Review.create({
+					customer_id: customerId,
+					product_id: productId,
+					review: review,
+					rating: rating
+				}, {
+					transaction: t
+				});
+			}
+			await t.commit();
 		}
 	};
 	APIs.ProductAPI = api;
@@ -254,8 +277,8 @@ if(module.id === '.') {
 		// 	descriptionLength: 100
 		// });
 		// console.log(products);
-		// let products = await API.searchProducts('ship');
-		// console.log(products);
+		// let products = await API.searchProducts('beautiful');
+		// console.log(products.rows.length, products.count);
 		// let product = await API.getProductById(1);
 		// console.log(product);
 		//
@@ -265,11 +288,11 @@ if(module.id === '.') {
 		// console.log(locations);
 		// let products = await API.getProductsByCategoryId(1);
 		// console.log(products);
-		// let products = await API.getProductsByDepartmentId(3);
+		// let products = await API.getProductsByDepartmentId(1);
 		// console.log(products);
-		// let reviews = await API.getProductReviewById(1);
-		// console.log(reviews);
-		// let ret = await API.createProductReview(1, 1, 'Testzxczxc - asdsa ', 5);
+		let reviews = await API.getProductReviewById(1);
+		console.log(reviews);
+		// let ret = await API.createProductReview(1, 1, 'TestReview - B', 3);
 		// console.log(ret);
 
 	})();

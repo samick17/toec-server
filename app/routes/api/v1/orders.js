@@ -3,14 +3,18 @@ const router = require('koa-router')();
 const OrdersError = require('@Priv/error/orders');
 const RouteHandler = require('@Priv/route-handler');
 const Validator = require('@Priv/validator');
+const RouteUtils = require('@Priv/route-utils');
 
 router.post('/', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	let {
 		cart_id,
 		shipping_id,
 		tax_id
 	} = ctx.request.body;
+	shipping_id = parseInt(shipping_id);
+	tax_id = parseInt(tax_id);
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
@@ -24,6 +28,7 @@ router.get('/:orderId', async (ctx) => {
 	let {
 		orderId
 	} = ctx.params;
+	orderId = parseInt(orderId);
 	Validator.validateInteger(orderId, OrdersError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
@@ -43,7 +48,8 @@ router.get('/:orderId', async (ctx) => {
 
 // Auth required
 router.get('/inCustomer', async (ctx) => {
-	let customerId = await RouteUtils.auth(ctx);
+	let {uid} = await RouteUtils.auth(ctx);
+	let customerId = uid;
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
 			let APIs = DB.getAPIs();
@@ -57,6 +63,7 @@ router.get('/shortDetail/:orderId', async (ctx) => {
 	let {
 		orderId
 	} = ctx.params;
+	orderId = parseInt(orderId);
 	Validator.validateInteger(orderId, OrdersError, 'IDNotNumber');
 	await RouteHandler.handleModel(ctx, {
 		onData: async () => {
