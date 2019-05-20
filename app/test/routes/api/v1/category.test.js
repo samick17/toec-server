@@ -7,10 +7,15 @@ const App = require('@App');
 describe('category', () => {
 
 	let app;
+	// let seq;
 
 	beforeEach(async () => {
 		await DB.init();
 		app = App.createApp();
+	});
+
+	afterEach(async () => {
+		await DB.close();
 	});
 
 	// it('get /', () => {

@@ -34,7 +34,7 @@ describe('auth', () => {
 					code: '0x0001',
 					message: 'Email ${email} is invalid'
 				}
-			});
+			}, 'InvalidEmailFormat');
 		} catch(err) {
 			assert.equal(err.code, '0x0001');
 			assert.equal(err.message, 'Email ggg@@ggg.com is invalid');
@@ -45,7 +45,7 @@ describe('auth', () => {
 					code: '0x0001',
 					message: 'Email ${email} is invalid'
 				}
-			});
+			}, 'InvalidEmailFormat');
 		} catch(err) {
 			assert.equal(err.code, '0x0001');
 			assert.equal(err.message, 'Email gggggg.com is invalid');
@@ -56,18 +56,21 @@ describe('auth', () => {
 					code: '0x0001',
 					message: 'Email ${email} is invalid'
 				}
-			});
+			}, 'InvalidEmailFormat');
 		} catch(err) {
 			assert.equal(err.code, '0x0001');
 			assert.equal(err.message, 'Email ggg@gg is invalid');
 		}
 	});
 
+	// TODO
 	it('validatePhoneNumber', async () => {
-
 	});
 
-	it('validateCreditCard', async () => {});
+	// TODO
+	it('validateCreditCard', async () => {
+		
+	});
 
 	it('validateInteger', async () => {
 		Validator.validateInteger(9);
