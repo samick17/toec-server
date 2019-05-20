@@ -44,6 +44,10 @@ async function init() {
 	APIs = dbData.APIs;
 }
 
+function close() {
+	return seq.close();
+}
+
 function getSeq() {
 	return seq;
 }
@@ -54,6 +58,7 @@ function getAPIs() {
 
 module.exports = {
 	init: init,
+	close: close,
 	getSeq: getSeq,
 	getAPIs: getAPIs
 };
